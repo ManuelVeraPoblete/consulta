@@ -1,0 +1,205 @@
+.panel {
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.medicInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1a56db, #0ea5e9);
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.medicName {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.medicSpec {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.closeBtn {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.closeBtn:hover { background: #fef2f2; color: #ef4444; border-color: #fecaca; }
+
+/* Modalidades */
+.modalidades {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.modalidadRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.modalidadLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+
+.modalidadNota {
+  font-size: 12px;
+  color: #475569;
+}
+
+/* Título */
+.agendaTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Días */
+.dias {
+  display: flex;
+  gap: 6px;
+}
+
+.diaBtn {
+  flex: 1;
+  padding: 8px 4px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  background: white;
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.diaBtn:hover { border-color: #1a56db; color: #1a56db; }
+
+.diaActivo {
+  background: #1a56db !important;
+  border-color: #1a56db !important;
+  color: white !important;
+}
+
+/* Slots */
+.slots {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.slot {
+  position: relative;
+  padding: 9px 4px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  background: #f8fafc;
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: all 0.18s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.slot:hover:not(:disabled) { border-color: #1a56db; color: #1a56db; background: #eff6ff; }
+
+.slotSel {
+  background: #1a56db !important;
+  border-color: #1a56db !important;
+  color: white !important;
+}
+
+.slotOcupado {
+  background: #f1f5f9 !important;
+  color: #cbd5e1 !important;
+  cursor: not-allowed !important;
+  text-decoration: line-through;
+}
+
+.slotDot {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 5px;
+  height: 5px;
+  background: #cbd5e1;
+  border-radius: 50%;
+}
+
+/* Botón agendar */
+.agendarBtn {
+  width: 100%;
+  padding: 12px;
+  background: #1a56db;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.agendarBtn:hover:not(:disabled) { background: #1e429f; }
+.agendarBtn:disabled { background: #e2e8f0; color: #94a3b8; cursor: not-allowed; }
+
+/* Confirmado */
+.confirmado {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f0fdf4;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 600;
+}

@@ -1,0 +1,144 @@
+.backdrop {
+  position: fixed; inset: 0;
+  background: rgba(15,23,42,0.45);
+  backdrop-filter: blur(3px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1100; padding: 16px;
+  animation: fadeIn 0.18s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.modal {
+  background: white; border-radius: 18px;
+  width: 100%; max-width: 480px;
+  display: flex; flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.22);
+  animation: popIn 0.24s cubic-bezier(0.34,1.56,0.64,1);
+  overflow: hidden;
+}
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.93) translateY(8px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Header */
+.header {
+  display: flex; align-items: center; gap: 14px;
+  padding: 18px 20px;
+  border-left: 5px solid #1a56db;
+}
+.avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: linear-gradient(135deg,#1a56db,#0ea5e9);
+  color: white; font-size: 15px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.headerInfo { flex: 1; }
+.pacienteNombre { font-size: 16px; font-weight: 700; color: #0f172a; }
+.pacienteRut    { font-size: 12px; color: #64748b; margin-top: 2px; }
+
+.estadoBadge {
+  font-size: 11px; font-weight: 700;
+  padding: 4px 10px; border-radius: 20px; border: 1px solid;
+  white-space: nowrap; flex-shrink: 0;
+}
+.closeBtn {
+  width: 30px; height: 30px; border-radius: 8px;
+  border: 1px solid #e2e8f0; background: white;
+  color: #64748b; cursor: pointer; font-size: 15px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s; flex-shrink: 0;
+}
+.closeBtn:hover { background: #f1f5f9; }
+
+/* Body */
+.body { padding: 16px 20px; display: flex; flex-direction: column; gap: 14px; }
+
+.section { display: flex; flex-direction: column; gap: 8px; }
+.sectionTitle {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.06em; color: #94a3b8;
+  padding-bottom: 6px; border-bottom: 1px solid #f1f5f9;
+}
+
+.row {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; color: #475569;
+}
+.row svg { flex-shrink: 0; }
+.rowLabel { font-weight: 600; color: #94a3b8; min-width: 80px; font-size: 12px; }
+.rowVal   { color: #0f172a; font-weight: 500; }
+
+/* Reagendar form */
+.reagendarBox {
+  background: #f8fafc; border: 1.5px solid #e2e8f0;
+  border-radius: 12px; padding: 14px 16px;
+  display: flex; flex-direction: column; gap: 12px;
+  animation: slideDown 0.18s ease;
+}
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.reagendarTitle {
+  font-size: 12px; font-weight: 700; color: #1d4ed8;
+  display: flex; align-items: center; gap: 6px;
+}
+.inputRow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.fieldLabel { font-size: 11px; font-weight: 600; color: #64748b; margin-bottom: 4px; }
+.input {
+  padding: 8px 10px; border: 1.5px solid #e2e8f0; border-radius: 8px;
+  font-size: 13px; color: #0f172a; background: white; outline: none;
+  width: 100%; box-sizing: border-box; transition: border-color 0.15s;
+}
+.input:focus { border-color: #1a56db; }
+.reagendarActions { display: flex; gap: 8px; justify-content: flex-end; }
+.btnConfirmar {
+  padding: 8px 18px; background: #1a56db; color: white;
+  font-size: 12px; font-weight: 700; border: none; border-radius: 8px;
+  cursor: pointer; display: flex; align-items: center; gap: 6px;
+  transition: opacity 0.15s;
+}
+.btnConfirmar:hover    { opacity: 0.9; }
+.btnConfirmar:disabled { opacity: 0.6; cursor: not-allowed; }
+.btnNoReagendar {
+  padding: 8px 14px; background: white; color: #64748b;
+  font-size: 12px; font-weight: 600; border: 1px solid #e2e8f0; border-radius: 8px;
+  cursor: pointer; transition: background 0.15s;
+}
+.btnNoReagendar:hover { background: #f1f5f9; }
+
+.spinner {
+  width: 13px; height: 13px;
+  border: 2px solid rgba(255,255,255,0.4); border-top-color: white;
+  border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Footer */
+.footer {
+  display: flex; align-items: center; gap: 8px;
+  padding: 14px 20px; border-top: 1px solid #f1f5f9; background: #f8fafc;
+  flex-wrap: wrap;
+}
+.btnCerrar {
+  padding: 9px 18px; background: white; color: #475569;
+  font-size: 13px; font-weight: 600; border: 1.5px solid #e2e8f0;
+  border-radius: 10px; cursor: pointer; transition: background 0.15s;
+}
+.btnCerrar:hover { background: #f1f5f9; }
+.btnReagendar {
+  display: flex; align-items: center; gap: 6px;
+  padding: 9px 18px; background: white; color: #1a56db;
+  font-size: 13px; font-weight: 700; border: 1.5px solid #1a56db;
+  border-radius: 10px; cursor: pointer; transition: background 0.15s, color 0.15s;
+}
+.btnReagendar:hover { background: #1a56db; color: white; }
+.btnCancelarCita {
+  margin-left: auto;
+  display: flex; align-items: center; gap: 6px;
+  padding: 9px 18px; background: #fef2f2; color: #dc2626;
+  font-size: 13px; font-weight: 700; border: 1.5px solid #fecaca;
+  border-radius: 10px; cursor: pointer; transition: background 0.15s;
+}
+.btnCancelarCita:hover { background: #fee2e2; }

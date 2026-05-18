@@ -1,0 +1,15 @@
+.wrapper { display: flex; flex-direction: column; gap: 16px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+.card { background: white; border: 1px solid #e2e8f0; border-radius: 14px; padding: 22px 24px; }
+.cardTitle { font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 18px; }
+.successMsg { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; border-radius: 8px; padding: 9px 12px; font-size: 13px; margin-bottom: 14px; }
+.form { display: flex; flex-direction: column; gap: 14px; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.group { display: flex; flex-direction: column; gap: 5px; }
+.label { font-size: 12.5px; font-weight: 600; color: #475569; }
+.input { border: 1px solid #e2e8f0; border-radius: 8px; padding: 9px 12px; font-size: 13.5px; color: #0f172a; outline: none; transition: border-color 0.15s; }
+.input:focus { border-color: #93c5fd; }
+.area { border: 1px solid #e2e8f0; border-radius: 8px; padding: 9px 12px; font-size: 13.5px; color: #0f172a; outline: none; font-family: inherit; resize: vertical; }
+.area:focus { border-color: #93c5fd; }
+.btnSave { background: #1d4ed8; color: white; border: none; border-radius: 9px; padding: 10px 20px; font-size: 13.5px; font-weight: 600; cursor: pointer; transition: opacity 0.15s; align-self: flex-start; }
+.btnSave:hover { opacity: 0.9; }

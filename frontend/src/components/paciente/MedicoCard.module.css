@@ -1,0 +1,144 @@
+.card {
+  background: white;
+  border: 1px solid var(--color-gray-100);
+  border-radius: var(--border-radius);
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+}
+
+/* Cabecera */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1a56db, #0ea5e9);
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  letter-spacing: 0.5px;
+}
+
+.identity {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.nombre {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-gray-900);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.especialidadBadge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #1a56db;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 20px;
+  padding: 3px 10px;
+  width: fit-content;
+}
+
+/* Descripción */
+.descripcion {
+  font-size: 13.5px;
+  color: var(--color-gray-500);
+  line-height: 1.55;
+  margin: 0;
+  padding-bottom: 2px;
+  border-bottom: 1px solid var(--color-gray-100);
+}
+
+/* Modalidades */
+.modalidades { display: flex; flex-direction: column; gap: 10px; }
+
+.modalidadesTitle {
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-gray-400);
+  margin: 0;
+}
+
+.modalidadesList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.modalidadItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.modalidadBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.modalidadInfo {
+  font-size: 13px;
+  color: var(--color-gray-600);
+  line-height: 1.4;
+}
+
+/* Botón agendar */
+.agendarBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  padding: 11px;
+  background: transparent;
+  color: #1a56db;
+  border: 1.5px solid #1a56db;
+  border-radius: var(--border-radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: auto;
+}
+
+.agendarBtn:hover {
+  background: #1a56db;
+  color: white;
+}

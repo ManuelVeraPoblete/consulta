@@ -1,0 +1,163 @@
+.wrapper { display: flex; flex-direction: column; gap: 16px; }
+
+.grid { display: grid; grid-template-columns: 360px 1fr; gap: 16px; align-items: start; }
+
+.calCard, .listCard {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.calNav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.calBtn { background: none; border: 1px solid #e2e8f0; border-radius: 6px; width: 28px; height: 28px; cursor: pointer; font-size: 16px; color: #64748b; }
+.calTitle { font-size: 14px; font-weight: 700; color: #0f172a; }
+
+.calGrid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.calDow { font-size: 8.5px; font-weight: 700; color: #94a3b8; text-align: center; padding: 4px 0; text-transform: uppercase; letter-spacing: 0.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.calDay {
+  aspect-ratio: 1;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  font-size: 12.5px;
+  color: #334155;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s;
+}
+.calDay:hover { background: #f1f5f9; }
+.calToday { color: #1d4ed8; font-weight: 700; }
+.calSelected { background: #1d4ed8 !important; color: white !important; border-radius: 50%; }
+
+.selFecha { text-align: center; font-size: 13px; color: #64748b; margin-top: 12px; font-weight: 500; }
+
+.listHead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.listTitle { font-size: 15px; font-weight: 700; color: #0f172a; }
+.btnNueva {
+  background: #1d4ed8;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.citasList { display: flex; flex-direction: column; gap: 4px; }
+
+.citaRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #f1f5f9;
+  transition: background 0.12s;
+}
+.citaRow:hover { background: #f8fafc; }
+
+.citaHora { font-size: 13px; font-weight: 700; color: #1d4ed8; min-width: 42px; }
+
+.citaAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1d4ed8, #0ea5e9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.citaInfo { flex: 1; }
+.citaNombre { font-size: 13.5px; font-weight: 600; color: #0f172a; }
+.citaMotivo { font-size: 12px; color: #94a3b8; }
+
+.citaBadge {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid;
+  white-space: nowrap;
+}
+
+.btnAtender {
+  background: linear-gradient(135deg, #1d4ed8, #0ea5e9);
+  color: white;
+  border: none;
+  border-radius: 7px;
+  padding: 5px 13px;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.14s;
+  flex-shrink: 0;
+  font-family: inherit;
+}
+.btnAtender:hover { opacity: 0.88; }
+
+.atendidaTag {
+  font-size: 12px;
+  font-weight: 700;
+  color: #15803d;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.citaAcc {
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  border-radius: 7px;
+  padding: 4px 10px;
+  font-size: 12px;
+  color: #64748b;
+  cursor: pointer;
+}
+.citaAcc:hover { background: #f1f5f9; }
+
+.citasCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 8px;
+  background: #1d4ed8;
+  color: white;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 1px 8px;
+  vertical-align: middle;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 48px 20px;
+  color: #94a3b8;
+  font-size: 13.5px;
+}
+.emptyState p { margin: 0; }
+
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid #e2e8f0;
+  border-top-color: #1d4ed8;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }

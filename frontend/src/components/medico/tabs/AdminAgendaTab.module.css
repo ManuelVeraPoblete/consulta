@@ -1,0 +1,217 @@
+.wrapper {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.left, .right { display: flex; flex-direction: column; gap: 16px; }
+
+.card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.cardTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 14px;
+}
+
+/* ── Controles de acción ── */
+.toggleRow { display: flex; gap: 8px; margin-bottom: 10px; }
+.toggleBtn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  background: #f8fafc;
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.toggleActive     { border-color: #22c55e; background: #f0fdf4; color: #15803d; }
+.toggleActiveRed  { border-color: #ef4444; background: #fef2f2; color: #b91c1c; }
+
+.dotVerde { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; flex-shrink: 0; }
+.dotRojo  { width: 8px; height: 8px; border-radius: 50%; background: #ef4444; flex-shrink: 0; }
+
+.granRow { display: flex; gap: 6px; margin-bottom: 10px; }
+.granBtn {
+  flex: 1;
+  padding: 6px 0;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 7px;
+  background: #f8fafc;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.granActive { border-color: #1d4ed8; background: #eff6ff; color: #1d4ed8; }
+
+.motivoInput {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #0f172a;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+.motivoInput:focus { outline: none; border-color: #93c5fd; }
+
+.resumenBox {
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+}
+.resumenText { font-size: 12.5px; color: #0369a1; font-weight: 600; }
+
+.btnAplicar {
+  width: 100%;
+  padding: 9px 0;
+  background: #22c55e;
+  color: white;
+  border: none;
+  border-radius: 9px;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.12s;
+  font-family: inherit;
+}
+.btnAplicar:hover:not(:disabled) { opacity: 0.88; }
+.btnAplicar:disabled { opacity: 0.5; cursor: not-allowed; }
+.btnAplicarRed { background: #ef4444; }
+
+.errorMsg {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 7px;
+  padding: 6px 10px;
+}
+
+/* ── Calendario ── */
+.calNav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.calBtn { background: none; border: 1px solid #e2e8f0; border-radius: 6px; width: 28px; height: 28px; cursor: pointer; font-size: 16px; color: #64748b; }
+.calTitle { font-size: 14px; font-weight: 700; color: #0f172a; }
+
+.calGrid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.calDow { font-size: 9px; font-weight: 700; color: #94a3b8; text-align: center; padding: 4px 0; text-transform: uppercase; letter-spacing: 0.02em; }
+
+.calDay {
+  aspect-ratio: 1;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.1s;
+}
+.calDay:hover { opacity: 0.8; }
+
+.dayDisponible { background: #dcfce7; color: #15803d; border-color: #86efac; }
+.dayBloqueado  { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
+.dayHoy        { outline: 2px solid #1d4ed8; outline-offset: 1px; }
+.daySelected   { outline: 2.5px solid #0f172a; outline-offset: 1px; font-weight: 800; }
+.dayRango      { outline: 1.5px dashed #64748b; outline-offset: 1px; }
+
+.legend { display: flex; gap: 16px; justify-content: center; margin-top: 12px; }
+.legItem { display: flex; align-items: center; gap: 5px; font-size: 11.5px; color: #64748b; }
+.legDot  { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+
+.loadingBox { display: flex; justify-content: center; padding: 32px; }
+.spinner {
+  width: 22px; height: 22px;
+  border: 3px solid #e2e8f0;
+  border-top-color: #1d4ed8;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Registros ── */
+.emptyReg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 36px 16px;
+  color: #94a3b8;
+  font-size: 13px;
+  text-align: center;
+}
+.emptyReg p  { margin: 0; font-weight: 600; }
+.emptyReg small { font-size: 11.5px; line-height: 1.5; }
+
+.regList { display: flex; flex-direction: column; gap: 6px; }
+.regRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid;
+}
+.regBloqueo    { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+.regLiberacion { background: #f0fdf4; border-color: #bbf7d0; color: #15803d; }
+
+.regIcon { flex-shrink: 0; display: flex; align-items: center; }
+
+.regInfo  { flex: 1; }
+.regTipo  { font-size: 12.5px; font-weight: 700; }
+.regFechas { font-size: 12px; opacity: 0.8; }
+.regMotivo { font-size: 11.5px; opacity: 0.7; margin-top: 2px; }
+
+.btnElim {
+  flex-shrink: 0;
+  background: none;
+  border: 1px solid currentColor;
+  border-radius: 6px;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.12s;
+}
+.btnElim:hover { opacity: 1; }
+
+/* ── Info card ── */
+.infoCard { background: #fafbff; }
+.rulesList {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.rulesList li { font-size: 12.5px; color: #475569; line-height: 1.5; }
+.rulesList strong { color: #0f172a; }
+
+@media (max-width: 900px) {
+  .wrapper { grid-template-columns: 1fr; }
+}

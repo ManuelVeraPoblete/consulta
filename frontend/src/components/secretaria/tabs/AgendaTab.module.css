@@ -1,0 +1,252 @@
+.wrapper { display: flex; flex-direction: column; gap: 18px; }
+
+.pageTitle { display: flex; align-items: center; gap: 14px; }
+.title { font-size: 20px; font-weight: 700; color: #0f172a; margin: 0 0 4px; }
+.subtitle { font-size: 13px; color: #64748b; margin: 0; }
+
+/* Médico tabs */
+.medicoTabs { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.medicoTab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 20px;
+  border: 1.5px solid #e2e8f0;
+  background: white;
+  font-size: 13px;
+  font-weight: 500;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.medicoTab:hover { border-color: #1a56db; color: #1a56db; }
+
+.medicoTabActive {
+  font-weight: 700;
+}
+
+.medicoTabDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Navegación semana */
+.weekNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 10px 18px;
+}
+
+.weekBtn {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a56db;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+.weekBtn:hover { background: #eff6ff; }
+
+.weekLabel { font-size: 14px; font-weight: 700; color: #0f172a; }
+
+.todayBtn {
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 3px 10px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.todayBtn:hover { background: #e2e8f0; }
+
+/* Calendario */
+.calWrapper {
+  background: white;
+  border: 1.5px solid #94a3b8;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.calGrid {
+  display: grid;
+  grid-template-columns: 64px repeat(5, 1fr);
+  border-bottom: 2px solid #94a3b8;
+  background: #f1f5f9;
+}
+
+.timeCol { padding: 12px 8px; }
+
+.dayHeader {
+  padding: 12px 8px;
+  text-align: center;
+  border-left: 1.5px solid #94a3b8;
+  transition: background 0.15s;
+}
+
+.dayName { font-size: 9.5px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.03em; }
+.dayNum  { font-size: 20px; font-weight: 700; color: #0f172a; margin-top: 4px; }
+
+.calBody { max-height: 520px; overflow-y: auto; }
+
+.horaRow {
+  display: grid;
+  grid-template-columns: 64px repeat(5, 1fr);
+  border-bottom: 1px solid #cbd5e1;
+  min-height: 52px;
+}
+.horaRow:last-child { border-bottom: none; }
+
+.horaLabel {
+  font-size: 11px;
+  color: #94a3b8;
+  font-weight: 600;
+  padding: 8px 8px 0;
+  text-align: right;
+  align-self: start;
+  white-space: nowrap;
+}
+
+.slot {
+  border-left: 1.5px solid #cbd5e1;
+  padding: 3px;
+  position: relative;
+  transition: background 0.12s;
+}
+.slot:hover { background: #eff6ff; cursor: pointer; }
+
+.slotBloqueado {
+  background: repeating-linear-gradient(
+    -45deg,
+    #fafafa,
+    #fafafa 4px,
+    #f1f5f9 4px,
+    #f1f5f9 8px
+  ) !important;
+  cursor: not-allowed !important;
+  pointer-events: none;
+}
+
+.dayHeaderBloqueado {
+  background: #fef2f2 !important;
+}
+.dayNumBloqueado { color: #ef4444 !important; }
+
+.bloqueadoBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 9px;
+  font-weight: 700;
+  color: #ef4444;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-top: 2px;
+}
+
+.citaBlock {
+  border-radius: 7px;
+  border-left: 3px solid;
+  padding: 5px 8px;
+  cursor: pointer;
+  transition: opacity 0.18s;
+  height: 100%;
+  box-sizing: border-box;
+}
+.citaBlock:hover { opacity: 0.8; }
+
+.citaNombre { font-size: 12px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.citaMed    { font-size: 10.5px; opacity: 0.75; }
+
+/* Leyenda */
+.leyenda { display: flex; gap: 16px; flex-wrap: wrap; }
+
+.leyendaItem { display: flex; align-items: center; gap: 6px; }
+.leyendaDot  { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.leyendaLabel { font-size: 12px; color: #475569; font-weight: 500; }
+
+/* Modal */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15,23,42,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  border-radius: 16px;
+  width: 360px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+}
+
+.modalHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.modalPaciente { font-size: 17px; font-weight: 700; color: #0f172a; }
+.modalSub { font-size: 13px; font-weight: 600; margin-top: 3px; }
+
+.closeBtn {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #475569;
+  flex-shrink: 0;
+}
+
+.modalBody { padding: 16px 20px; display: flex; flex-direction: column; gap: 14px; }
+.modalRow { font-size: 14px; color: #475569; }
+.modalRow b { color: #0f172a; }
+
+.modalActions { display: flex; gap: 10px; }
+
+.confirmBtn {
+  flex: 1;
+  padding: 9px;
+  background: #1a56db;
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  border: none;
+  border-radius: 9px;
+  cursor: pointer;
+}
+
+.cancelBtnRed {
+  flex: 1;
+  padding: 9px;
+  background: #fef2f2;
+  color: #b91c1c;
+  font-size: 13px;
+  font-weight: 700;
+  border: 1px solid #fecaca;
+  border-radius: 9px;
+  cursor: pointer;
+}

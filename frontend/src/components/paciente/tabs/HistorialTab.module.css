@@ -1,0 +1,151 @@
+.wrapper { display: flex; flex-direction: column; gap: 20px; }
+
+.pageTitle { display: flex; align-items: center; gap: 14px; }
+.title { font-size: 20px; font-weight: 700; color: #0f172a; margin: 0 0 4px; }
+.subtitle { font-size: 13px; color: #64748b; margin: 0; }
+
+/* Área: lista + detalle */
+.contentArea {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  align-items: start;
+}
+
+/* Lista */
+.lista { display: flex; flex-direction: column; gap: 8px; }
+
+.registro {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: white;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px 18px;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.registro:hover { border-color: #1a56db; box-shadow: 0 2px 10px rgba(26,86,219,0.07); }
+.registroSel { border-color: #1a56db !important; background: #f8fbff !important; }
+
+.regLeft {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 90px;
+}
+
+.regFecha { font-size: 12px; font-weight: 600; color: #64748b; }
+
+.regTipo {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid;
+  white-space: nowrap;
+}
+
+.regBody { flex: 1; }
+.regDiag { font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+.regMedico { font-size: 13px; color: #64748b; margin-bottom: 8px; }
+
+.regMeds { display: flex; gap: 6px; flex-wrap: wrap; }
+.regMedTag {
+  font-size: 11px;
+  background: #eff6ff;
+  color: #1a56db;
+  border: 1px solid #bfdbfe;
+  border-radius: 6px;
+  padding: 2px 8px;
+}
+.regMore { font-size: 11px; color: #94a3b8; align-self: center; }
+
+.regArrow { flex-shrink: 0; }
+
+/* Panel detalle */
+.detallePanel {
+  width: 340px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  animation: slideIn 0.2s ease;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(10px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Detalle */
+.detalle {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+}
+
+.detalleHeader {
+  padding: 18px 20px;
+  background: linear-gradient(135deg, #1a56db, #0ea5e9);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.detalleDiag { font-size: 16px; font-weight: 700; color: white; line-height: 1.3; }
+.detalleMeta { font-size: 12px; color: rgba(255,255,255,0.75); margin-top: 4px; }
+
+.closeBtn {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.15);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+.closeBtn:hover { background: rgba(255,255,255,0.25); }
+
+.detalleBody {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.section { display: flex; flex-direction: column; gap: 8px; }
+
+.sectionTitle {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+}
+
+.detalleDesc { font-size: 13.5px; color: #475569; line-height: 1.6; margin: 0; }
+
+.tagList { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.tagBlue { font-size: 12px; padding: 4px 10px; border-radius: 6px; background: #eff6ff; color: #1a56db; border: 1px solid #bfdbfe; font-weight: 500; }
+.tagRed  { font-size: 12px; padding: 4px 10px; border-radius: 6px; background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; font-weight: 500; }
+.tagGray { font-size: 12px; padding: 4px 10px; border-radius: 6px; background: #f8fafc; color: #475569; border: 1px solid #e2e8f0; font-weight: 500; }
+
+.proximaFecha {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a56db;
+}

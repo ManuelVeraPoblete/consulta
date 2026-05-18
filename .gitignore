@@ -1,0 +1,98 @@
+# =========================================================
+# DEPENDENCIAS NODE
+# Ignora node_modules en backend, frontend o cualquier subdirectorio
+# =========================================================
+node_modules/
+**/node_modules/
+
+
+# =========================================================
+# VARIABLES DE ENTORNO
+# Nunca subir credenciales, claves JWT, datos de BD, API keys, etc.
+# =========================================================
+.env
+.env.*
+!.env.example
+
+backend/.env
+backend/.env.*
+frontend/.env
+frontend/.env.*
+
+
+# =========================================================
+# BUILDS / COMPILADOS
+# =========================================================
+dist/
+build/
+out/
+
+frontend/dist/
+frontend/build/
+backend/dist/
+backend/build/
+
+
+# =========================================================
+# LOGS
+# =========================================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+
+# =========================================================
+# CACHE
+# =========================================================
+.cache/
+.parcel-cache/
+.vite/
+.angular/
+.eslintcache
+.stylelintcache
+
+
+# =========================================================
+# COBERTURA DE TESTS
+# =========================================================
+coverage/
+.nyc_output/
+
+
+# =========================================================
+# ARCHIVOS DEL SISTEMA OPERATIVO
+# =========================================================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+
+# =========================================================
+# EDITORES / IDE
+# =========================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+
+# =========================================================
+# ARCHIVOS TEMPORALES
+# =========================================================
+tmp/
+temp/
+*.tmp
+*.bak
+
+
+# =========================================================
+# PACKAGE MANAGERS
+# Se recomienda subir package-lock.json si usas npm
+# No ignores package-lock.json salvo que tengas una razón clara
+# =========================================================
+.pnpm-store/
+.yarn/
+.yarn-cache/

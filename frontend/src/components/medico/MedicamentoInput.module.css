@@ -1,0 +1,113 @@
+.wrapper {
+  position: relative;
+  flex: 1;
+}
+
+.inputBox {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input {
+  width: 100%;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 7px;
+  padding: 8px 32px 8px 10px;
+  font-size: 13px;
+  color: #0f172a;
+  outline: none;
+  font-family: inherit;
+  background: white;
+  transition: border-color 0.14s;
+}
+.input:focus { border-color: #93c5fd; }
+.input::placeholder { color: #94a3b8; }
+
+/* Spinner búsqueda */
+.spinner {
+  position: absolute;
+  right: 9px;
+  width: 13px;
+  height: 13px;
+  border: 2px solid #e2e8f0;
+  border-top-color: #1d4ed8;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Botón limpiar */
+.clearBtn {
+  position: absolute;
+  right: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  border-radius: 4px;
+  transition: color 0.12s;
+}
+.clearBtn:hover { color: #475569; }
+
+/* Lista de sugerencias */
+.lista {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  z-index: 9999;
+  list-style: none;
+  padding: 4px;
+  max-height: 240px;
+  overflow-y: auto;
+}
+.lista::-webkit-scrollbar { width: 4px; }
+.lista::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.item:hover, .itemActivo {
+  background: #eff6ff;
+}
+
+.itemNombre {
+  font-size: 12.5px;
+  color: #0f172a;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.itemReg {
+  font-size: 10.5px;
+  color: #94a3b8;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Texto resaltado */
+.mark {
+  background: #fef08a;
+  color: #0f172a;
+  border-radius: 2px;
+  font-style: normal;
+}

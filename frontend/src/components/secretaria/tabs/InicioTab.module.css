@@ -1,0 +1,381 @@
+.wrapper { display: flex; flex-direction: column; gap: 20px; }
+
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+.statCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 18px 16px;
+  border-radius: 14px;
+  border: 1.5px solid;
+  background: white;
+  text-align: center;
+}
+
+.statIcon { font-size: 24px; }
+.statVal  { font-size: 28px; font-weight: 800; line-height: 1; }
+.statLabel { font-size: 12px; color: #64748b; font-weight: 500; }
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.colLeft, .colRight { display: flex; flex-direction: column; gap: 16px; }
+
+.card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 18px 20px;
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.cardTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.verBtn {
+  font-size: 12px;
+  color: #1a56db;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+.verBtn:hover { text-decoration: underline; }
+
+/* Citas list */
+.citasList, .histList { display: flex; flex-direction: column; gap: 10px; }
+
+.citaRow, .histRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: #f8fafc;
+  border-radius: 10px;
+  border: 1px solid #f1f5f9;
+}
+
+.citaHora {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a56db;
+  min-width: 44px;
+  text-align: center;
+}
+
+.citaInfo, .histInfo { flex: 1; }
+.citaPaciente, .histPaciente { font-size: 13px; font-weight: 600; color: #0f172a; }
+.citaMedico, .histMedico { font-size: 11.5px; color: #64748b; margin-top: 1px; }
+
+.histFecha {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 600;
+  min-width: 70px;
+}
+
+.badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Calendario */
+.calNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.calNavBtn {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #475569;
+}
+.calNavBtn:hover { background: #eff6ff; color: #1a56db; }
+
+.calTitle { font-size: 14px; font-weight: 700; color: #0f172a; }
+
+.calGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.calDow { font-size: 11px; font-weight: 600; color: #94a3b8; text-align: center; padding: 4px 0; }
+
+.calDay {
+  font-size: 12.5px;
+  text-align: center;
+  padding: 6px 4px;
+  border-radius: 7px;
+  color: #475569;
+  cursor: default;
+}
+.calDay:hover { background: #eff6ff; color: #1a56db; }
+
+.calToday {
+  background: #1a56db !important;
+  color: white !important;
+  font-weight: 700;
+}
+
+/* Form */
+.form { display: flex; flex-direction: column; gap: 12px; }
+
+.formRow { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.formGroup { display: flex; flex-direction: column; gap: 4px; }
+
+.label { font-size: 12px; font-weight: 600; color: #475569; }
+
+.input {
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #0f172a;
+  outline: none;
+  background: #f8fafc;
+  transition: border-color 0.18s;
+}
+.input:focus { border-color: #1a56db; background: white; }
+
+.submitBtn {
+  width: 100%;
+  padding: 10px;
+  background: linear-gradient(135deg, #1a56db, #0ea5e9);
+  color: white;
+  font-size: 13.5px;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: opacity 0.18s;
+  margin-top: 4px;
+}
+.submitBtn:hover { opacity: 0.9; }
+
+.successMsg {
+  font-size: 13px;
+  font-weight: 600;
+  color: #15803d;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 8px 14px;
+  margin-bottom: 8px;
+}
+
+.emptyState {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 10px; padding: 40px 20px; color: #94a3b8; font-size: 13.5px;
+}
+.emptyState p { margin: 0; }
+
+/* Lista genérica de citas/atenciones */
+.itemList { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+
+.item {
+  display: grid;
+  grid-template-columns: auto 1fr 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  background: #f8fafc;
+  border-radius: 10px;
+  border: 1px solid #f1f5f9;
+  font-size: 13px;
+}
+
+.itemDate  { font-weight: 700; color: #1a56db; font-size: 12px; white-space: nowrap; }
+.itemName  { font-weight: 600; color: #0f172a; }
+.itemSub   { color: #64748b; font-size: 12px; }
+
+/* Colores de badge por estado */
+.programada { color: #1a56db; background: #eff6ff; border-color: #bfdbfe; }
+.confirmada  { color: #15803d; background: #f0fdf4; border-color: #bbf7d0; }
+.completada  { color: #7c3aed; background: #f5f3ff; border-color: #ddd6fe; }
+.cancelada   { color: #dc2626; background: #fef2f2; border-color: #fecaca; }
+
+/* Item con botón Ver para últimas atenciones */
+.itemAtencion {
+  display: grid;
+  grid-template-columns: auto 1fr 1fr auto auto;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  background: #f8fafc;
+  border-radius: 10px;
+  border: 1px solid #f1f5f9;
+  font-size: 13px;
+}
+
+.btnVerAtencion {
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1.5px solid #1a56db;
+  border-radius: 7px;
+  background: white;
+  color: #1a56db;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s;
+}
+.btnVerAtencion:hover { background: #1a56db; color: white; }
+
+/* Modal atención */
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15,23,42,0.45);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}
+
+.modalAtencion {
+  background: white;
+  border-radius: 18px;
+  width: 100%;
+  max-width: 560px;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  overflow: hidden;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 22px;
+  background: linear-gradient(135deg, #1a56db, #0ea5e9);
+  flex-shrink: 0;
+}
+
+.modalHeaderInfo { flex: 1; }
+.modalTitulo     { font-size: 16px; font-weight: 700; color: white; }
+.modalSubtitulo  { font-size: 12px; color: rgba(255,255,255,0.8); margin-top: 3px; }
+
+.modalClose {
+  width: 30px; height: 30px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.15);
+  color: white; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.modalClose:hover { background: rgba(255,255,255,0.28); }
+
+.modalBody {
+  overflow-y: auto;
+  padding: 18px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex: 1;
+}
+
+.modalEstado { text-align: center; padding: 30px 0; color: #94a3b8; font-size: 14px; }
+.modalError  { color: #dc2626; }
+
+.atencionCampo { display: flex; flex-direction: column; gap: 4px; }
+.atencionLabel {
+  font-size: 11px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.atencionValor {
+  font-size: 13.5px;
+  color: #0f172a;
+  line-height: 1.5;
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.signosGrid {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+.signo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 10px;
+  padding: 10px 16px;
+  min-width: 80px;
+}
+.signoVal   { font-size: 15px; font-weight: 700; color: #1a56db; }
+.signoLabel { font-size: 10px; color: #64748b; font-weight: 600; text-align: center; }
+
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 22px;
+  border-top: 1px solid #e2e8f0;
+  background: #f8fafc;
+  flex-shrink: 0;
+}
+
+.btnCerrar {
+  padding: 8px 20px;
+  background: white;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 9px;
+  cursor: pointer;
+}
+.btnCerrar:hover { background: #f1f5f9; }

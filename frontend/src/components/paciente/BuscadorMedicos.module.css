@@ -1,0 +1,189 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── Fila de filtros ─────────────────────────────────────────────────── */
+.filtros {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.selectWrap,
+.inputWrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  border: 1.5px solid var(--color-gray-200);
+  border-radius: var(--border-radius-sm);
+  padding: 0 14px;
+  transition: border-color 0.2s;
+}
+
+.selectWrap:focus-within,
+.inputWrap:focus-within {
+  border-color: #1a56db;
+  box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.09);
+}
+
+.selectWrap { min-width: 220px; }
+.inputWrap  { flex: 1; min-width: 180px; position: relative; }
+
+.select,
+.input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 14px;
+  font-family: var(--font-family);
+  color: var(--color-gray-800);
+  padding: 11px 0;
+  width: 100%;
+}
+
+.select { cursor: pointer; }
+
+.clearInput {
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  color: var(--color-gray-400);
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+.clearInput:hover { color: var(--color-gray-600); }
+
+.btnBuscar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 11px 20px;
+  background: #1a56db;
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  white-space: nowrap;
+}
+.btnBuscar:hover { background: #1e429f; transform: translateY(-1px); }
+
+.btnLimpiar {
+  background: none;
+  border: 1.5px solid var(--color-gray-200);
+  border-radius: var(--border-radius-sm);
+  padding: 11px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font-family);
+  color: var(--color-gray-500);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.btnLimpiar:hover { border-color: var(--color-gray-400); color: var(--color-gray-700); }
+
+/* ── Chips de filtros activos ────────────────────────────────────────── */
+.chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #eff6ff;
+  color: #1a56db;
+  border: 1px solid #bfdbfe;
+  border-radius: 20px;
+  padding: 4px 10px 4px 12px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.chip button {
+  background: none;
+  border: none;
+  color: #1a56db;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+/* ── Contador de resultados ─────────────────────────────────────────── */
+.resultCount {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-gray-500);
+  margin: 0;
+}
+
+/* ── Grid de tarjetas ────────────────────────────────────────────────── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+/* ── Estados vacío / error / cargando ───────────────────────────────── */
+.estado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 48px 24px;
+  color: var(--color-gray-400);
+  font-size: 14px;
+  text-align: center;
+}
+
+.estado p { max-width: 320px; line-height: 1.5; }
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #e2e8f0;
+  border-top-color: #1a56db;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.errorBox {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+  border-radius: var(--border-radius-sm);
+  padding: 14px 16px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.errorBox svg { flex-shrink: 0; margin-top: 1px; }
+
+/* ── Responsive ─────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .filtros { flex-direction: column; }
+  .selectWrap, .inputWrap, .btnBuscar, .btnLimpiar { width: 100%; }
+  .grid { grid-template-columns: 1fr; }
+}

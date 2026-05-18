@@ -1,0 +1,212 @@
+.welcome {
+  background: linear-gradient(135deg, #eff6ff, #e0f2fe);
+  border: 1px solid #bfdbfe;
+  border-radius: var(--border-radius);
+  padding: 16px 20px;
+  font-size: 15px;
+  color: var(--color-gray-700);
+  margin-bottom: 28px;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.section {
+  background: white;
+  border-radius: var(--border-radius);
+  padding: 24px;
+  border: 1px solid var(--color-gray-100);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 24px;
+}
+
+.sectionHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.sectionTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-gray-800);
+  margin-bottom: 20px;
+}
+
+.sectionHead .sectionTitle {
+  margin-bottom: 0;
+}
+
+.searchInput {
+  padding: 8px 14px;
+  border: 1.5px solid var(--color-gray-200);
+  border-radius: var(--border-radius-sm);
+  font-size: 14px;
+  font-family: var(--font-family);
+  outline: none;
+  width: 240px;
+  transition: border-color var(--transition);
+}
+.searchInput:focus {
+  border-color: var(--color-primary);
+}
+
+/* Table */
+.table {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tableHeader {
+  display: grid;
+  grid-template-columns: 80px 1fr 1fr 120px;
+  gap: 16px;
+  padding: 10px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-gray-500);
+  border-bottom: 1px solid var(--color-gray-100);
+}
+
+.tableHeader.fiveCols,
+.tableRow.fiveCols {
+  grid-template-columns: 1fr 1fr 110px 80px 120px;
+}
+
+.tableRow {
+  display: grid;
+  grid-template-columns: 80px 1fr 1fr 120px;
+  gap: 16px;
+  padding: 12px 16px;
+  border-radius: var(--border-radius-sm);
+  align-items: center;
+  transition: background var(--transition);
+  font-size: 14px;
+}
+.tableRow:hover { background: var(--color-gray-50); }
+
+.time { font-weight: 600; color: var(--color-primary); }
+.patient { font-weight: 500; }
+.reason { color: var(--color-gray-600); }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid;
+  white-space: nowrap;
+}
+
+/* Two column layout */
+.twoCol {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+/* Appointment cards (paciente) */
+.appointmentList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.appointmentCard {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  background: var(--color-gray-50);
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--color-gray-100);
+}
+
+.apptLeft {
+  text-align: center;
+  min-width: 70px;
+  padding-right: 16px;
+  border-right: 1px solid var(--color-gray-200);
+}
+
+.apptDate {
+  font-size: 12px;
+  color: var(--color-gray-500);
+  margin-bottom: 4px;
+}
+
+.apptTime {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.apptRight {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.apptDoctor {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--color-gray-800);
+}
+
+.apptSpec {
+  font-size: 13px;
+  color: var(--color-gray-500);
+  margin-bottom: 6px;
+}
+
+/* History cards */
+.historyCard {
+  padding: 16px;
+  background: var(--color-gray-50);
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--color-gray-100);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.historyDate {
+  font-size: 12px;
+  color: var(--color-gray-400);
+}
+
+.historyDoctor {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--color-gray-800);
+}
+
+.historyRow {
+  display: flex;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--color-gray-700);
+}
+
+.historyLabel {
+  font-weight: 600;
+  color: var(--color-gray-600);
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .twoCol { grid-template-columns: 1fr; }
+  .statsGrid { grid-template-columns: 1fr 1fr; }
+  .tableHeader, .tableRow { grid-template-columns: 1fr 1fr 100px; }
+  .tableHeader.fiveCols, .tableRow.fiveCols { grid-template-columns: 1fr 1fr 80px; }
+}

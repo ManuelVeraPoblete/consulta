@@ -1,0 +1,90 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 420px;
+}
+
+.header { text-align: center; }
+
+.title {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--color-gray-900);
+  margin-bottom: 6px;
+}
+
+.accent { color: var(--color-teal); }
+
+.subtitle {
+  font-size: 14px;
+  color: var(--color-gray-500);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.roleGroup { display: flex; flex-direction: column; gap: 8px; }
+
+.roleLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-gray-700);
+}
+
+.roles {
+  display: flex;
+  gap: 10px;
+}
+
+.roleOption {
+  flex: 1;
+  text-align: center;
+  padding: 10px;
+  border: 1.5px solid var(--color-gray-200);
+  border-radius: var(--border-radius-sm);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-gray-600);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.roleOption:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.roleSelected {
+  border-color: var(--color-primary);
+  background: #eff6ff;
+  color: var(--color-primary);
+}
+
+.radioHidden {
+  display: none;
+}
+
+.backBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: var(--color-gray-500);
+  cursor: pointer;
+  transition: color var(--transition);
+}
+.backBtn:hover { color: var(--color-primary); }

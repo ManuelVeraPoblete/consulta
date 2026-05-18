@@ -1,0 +1,269 @@
+.wrapper { display: flex; flex-direction: column; gap: 20px; }
+
+.pageTitle { display: flex; align-items: center; gap: 14px; }
+.title     { font-size: 20px; font-weight: 700; color: #0f172a; margin: 0 0 4px; }
+.subtitle  { font-size: 13px; color: #64748b; margin: 0; }
+
+/* Layout 2 columnas */
+.panelGrid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.panelLabel {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+}
+
+/* ── Calendario ── */
+.panelCal {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px;
+  width: 280px;
+  flex-shrink: 0;
+}
+
+.cal { display: flex; flex-direction: column; gap: 10px; }
+
+.calNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.calTitulo { font-size: 14px; font-weight: 700; color: #0f172a; }
+
+.calNavBtn {
+  width: 28px; height: 28px;
+  border-radius: 7px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: #475569;
+  transition: background 0.15s, color 0.15s;
+}
+.calNavBtn:hover:not(:disabled) { background: #eff6ff; color: #1a56db; }
+.calNavBtn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.calGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+
+.calDow {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-align: center;
+  padding: 4px 0;
+  text-transform: uppercase;
+}
+
+.calVacio { /* celda vacía antes del día 1 */ }
+
+.calDia {
+  aspect-ratio: 1;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  font-size: 12.5px;
+  color: #475569;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+.calDia:hover:not(:disabled) { background: #eff6ff; color: #1a56db; }
+
+.calHoy {
+  font-weight: 700;
+  color: #1a56db;
+  border: 1.5px solid #bfdbfe;
+  background: #eff6ff;
+}
+
+/* Extremos del rango (inicio y fin) */
+.calExtremo {
+  background: #1a56db !important;
+  color: white !important;
+  font-weight: 700;
+  border: none;
+}
+
+/* Días intermedios del rango */
+.calEnRango {
+  background: #dbeafe !important;
+  color: #1e40af !important;
+  border-radius: 0 !important;
+}
+
+/* Redondeo izquierdo del inicio */
+.calInicioRango { border-radius: 7px 0 0 7px !important; }
+
+/* Redondeo derecho del fin */
+.calFinRango    { border-radius: 0 7px 7px 0 !important; }
+
+.calFuturo { opacity: 0.28; cursor: not-allowed; pointer-events: none; }
+
+/* Info del rango seleccionado */
+.rangoInfo {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 12px;
+  font-size: 12px;
+  color: #475569;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 9px 12px;
+  line-height: 1.5;
+}
+
+.limpiarBtn {
+  margin-top: 8px;
+  width: 100%;
+  padding: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.limpiarBtn:hover { background: #f1f5f9; color: #0f172a; }
+
+/* ── Panel config ── */
+.panelConfig {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cargandoTxt { font-size: 13px; color: #94a3b8; }
+.sinMedicos  { font-size: 13px; color: #94a3b8; }
+
+.medicosList { display: flex; flex-direction: column; gap: 8px; }
+
+.medicoCard {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  background: #f8fafc;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s;
+}
+.medicoCard:hover { border-color: #1a56db; background: #eff6ff; }
+
+.medicoActivo {
+  border-color: #1a56db !important;
+  background: #eff6ff !important;
+}
+
+.medicoAvatar {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1a56db, #0ea5e9);
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+.medicoInfo  { flex: 1; min-width: 0; }
+.medicoNombre { font-size: 13.5px; font-weight: 700; color: #0f172a; }
+.medicoEsp    { font-size: 12px; color: #64748b; margin-top: 2px; }
+
+.medicoCheck { flex-shrink: 0; }
+
+.resumenSel {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12.5px;
+  color: #15803d;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 9px;
+  padding: 10px 13px;
+  line-height: 1.5;
+}
+.resumenSel strong { color: #0f172a; }
+
+.errorMsg {
+  font-size: 13px; font-weight: 600;
+  color: #dc2626; background: #fef2f2;
+  border: 1px solid #fecaca; border-radius: 8px; padding: 10px 14px;
+}
+
+/* Botón generar */
+.generarBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 13px;
+  background: linear-gradient(135deg, #1a56db, #0ea5e9);
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: opacity 0.18s;
+  margin-top: auto;
+}
+.generarBtn:hover:not(:disabled) { opacity: 0.9; }
+.generarBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.spinner {
+  width: 16px; height: 16px;
+  border: 2.5px solid rgba(255,255,255,0.4);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Heredados del CSS anterior (no usados activamente pero los dejo por compatibilidad) */
+.section       { display: flex; flex-direction: column; gap: 10px; }
+.sectionLabel  { font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.04em; }
+.input {
+  padding: 9px 12px; border: 1px solid #e2e8f0; border-radius: 8px;
+  font-size: 13px; color: #0f172a; background: #f8fafc; outline: none;
+  transition: border-color 0.18s; width: 100%; box-sizing: border-box;
+}
+.input:focus { border-color: #1a56db; background: white; }
+.emptyState {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 12px; padding: 80px 20px; color: #94a3b8; font-size: 14px;
+}
+.emptyState p { margin: 0; font-weight: 600; }

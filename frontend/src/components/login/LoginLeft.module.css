@@ -1,0 +1,243 @@
+/* ── Panel izquierdo: imagen de fondo + overlay ──────────────────────── */
+.left {
+  flex: 1 1 55%;
+  position: relative;
+  background-image: url('/images/fondo_login.png');
+  background-size: cover;
+  background-position: center top;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Overlay principal: gradiente azul-marino oscuro para legibilidad del texto */
+.left::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    150deg,
+    rgba(8, 20, 70, 0.93) 0%,
+    rgba(26, 86, 219, 0.82) 55%,
+    rgba(13, 148, 136, 0.76) 100%
+  );
+  z-index: 0;
+}
+
+/* Overlay secundario: viñeta suave en los bordes */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at 60% 40%,
+    transparent 35%,
+    rgba(0, 5, 30, 0.35) 100%
+  );
+  z-index: 0;
+}
+
+/* Contenido sobre los overlays */
+.content {
+  position: relative;
+  z-index: 1;
+  padding: 48px 52px;
+  width: 100%;
+}
+
+/* ── Tarjeta flotante (historial médico) ─────────────────────────────── */
+.floatingCard {
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 16px;
+  padding: 16px 20px;
+  margin-bottom: 40px;
+  width: 260px;
+  margin-left: auto;
+  margin-right: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+.cardLabel {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+  flex-shrink: 0;
+}
+
+.cardLines { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.line {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+.ecgLine svg {
+  width: 100%;
+  height: 30px;
+}
+
+/* ── Iconos flotantes decorativos ───────────────────────────────────── */
+.floatingIcon {
+  position: absolute;
+  width: 52px;
+  height: 52px;
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* ── Titular principal ───────────────────────────────────────────────── */
+.headline { margin-bottom: 36px; }
+
+.headline h1 {
+  font-size: clamp(28px, 3vw, 40px);
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.15;
+  margin-bottom: 14px;
+  text-shadow: 0 2px 12px rgba(0, 0, 30, 0.4);
+  letter-spacing: -0.01em;
+}
+
+/* Palabra "prioridad" en degradado teal-verde */
+.accent {
+  background: linear-gradient(135deg, #5eead4, #34d399);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.88);
+  line-height: 1.65;
+  max-width: 320px;
+  text-shadow: 0 1px 4px rgba(0, 0, 30, 0.3);
+}
+
+/* ── Lista de características ────────────────────────────────────────── */
+.features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 40px;
+}
+
+.featureItem {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.featureIcon {
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #7dd3fc;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.featureTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 1px 4px rgba(0, 0, 30, 0.3);
+}
+
+.featureDesc {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.75);
+  margin-top: 2px;
+}
+
+/* ── Badge inferior (plataforma segura) ──────────────────────────────── */
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
+  padding: 14px 18px;
+  width: fit-content;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.badgeTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.badgeDesc {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.78);
+  margin-top: 2px;
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .left {
+    flex: none;
+    width: 100%;
+    min-height: 320px;
+    background-position: center center;
+  }
+
+  .content {
+    padding: 32px 28px;
+  }
+
+  .floatingCard {
+    display: none;
+  }
+
+  .floatingIcon {
+    display: none;
+  }
+
+  .headline h1 {
+    font-size: 26px;
+  }
+
+  .features {
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+}
