@@ -13,13 +13,13 @@ const parseBoolean = (value) => {
 
 /**
  * TiDB Cloud exige conexión segura mediante SSL/TLS.
- * Si DB_SSL=true, Sequelize enviará la conexión usando TLS.
+ * DB_SSL=true activa la conexión cifrada.
  */
 const shouldUseSsl = parseBoolean(process.env.DB_SSL);
 
 /**
  * Configuración centralizada de Sequelize.
- * Usa variables de entorno para no dejar credenciales dentro del código.
+ * Todas las credenciales vienen desde variables de entorno.
  */
 const sequelize = new Sequelize(
   process.env.DB_NAME,
@@ -32,15 +32,14 @@ const sequelize = new Sequelize(
     logging: false,
 
     /**
-     * Configuración específica del driver mysql2 usado por Sequelize.
-     * Esta sección soluciona el error:
-     * "Connections using insecure transport are prohibited".
+     * Render no tiene el certificado CA de TiDB como archivo local.
+     * Por eso usamos SSL cifrado sin validación estricta del certificado.
      */
     dialectOptions: shouldUseSsl
       ? {
           ssl: {
             minVersion: 'TLSv1.2',
-            rejectUnauthorized: true,
+            rejectUnauthorized: false,
           },
         }
       : {},
