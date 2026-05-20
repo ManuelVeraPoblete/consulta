@@ -57,6 +57,8 @@ button {
   font-family: var(--font-family);
 }
 
-input {
+input,
+select,
+textarea {
   font-family: var(--font-family);
 }

@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { buscarMedicos, getEspecialidades, getDashboard, getMisCitas, getMisPacientes } = require('../controllers/medicoController');
+const { buscarMedicos, getEspecialidades, getDashboard, getMisCitas, getMisPacientes, getMisRecetas } = require('../controllers/medicoController');
 const { getEstadoMes, crearRegistro, eliminarRegistro, verificarDisponibilidad } = require('../controllers/agendaController');
 const { authenticate, authorize } = require('../middleware/authMiddleware');
 
@@ -10,6 +10,7 @@ router.get('/buscar',         authenticate, buscarMedicos);
 router.get('/dashboard', authenticate, authorize('medico', 'admin'), getDashboard);
 router.get('/citas',     authenticate, authorize('medico', 'admin'), getMisCitas);
 router.get('/pacientes', authenticate, authorize('medico', 'admin'), getMisPacientes);
+router.get('/recetas',  authenticate, authorize('medico', 'admin'), getMisRecetas);
 
 // Agenda – administración de bloqueos (solo médico)
 router.get('/agenda/estado',        authenticate, authorize('medico', 'admin'), getEstadoMes);

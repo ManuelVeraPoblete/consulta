@@ -73,3 +73,10 @@ export const verificarDisponibilidadAgenda = async (medicoId, fecha) => {
   const { data } = await api.get(`/medicos/agenda/disponibilidad?medicoId=${medicoId}&fecha=${fecha}`);
   return data;
 };
+
+export const getMisRecetas = async (busqueda = '') => {
+  const params = new URLSearchParams();
+  if (busqueda) params.append('busqueda', busqueda);
+  const { data } = await api.get(`/medicos/recetas?${params}`);
+  return data;
+};

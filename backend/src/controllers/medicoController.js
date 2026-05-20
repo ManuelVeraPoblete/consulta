@@ -1,5 +1,5 @@
 const { Op } = require('sequelize');
-const { MedicoPerfil, User, Cita, Paciente, AtencionMedica, Especialidad: EspecialidadModel } = require('../models');
+const { MedicoPerfil, User, Cita, Paciente, AtencionMedica, Receta, RecetaItem, Especialidad: EspecialidadModel } = require('../models');
 
 const buscarMedicos = async (req, res) => {
   try {
@@ -194,4 +194,52 @@ const getMisPacientes = async (req, res) => {
   }
 };
 
-module.exports = { buscarMedicos, getEspecialidades, getDashboard, getMisCitas, getMisPacientes };
+const getMisRecetas = async (req, res) => {
+  try {
+    const medicoId = req.user.id;
+    const { busqueda } = req.query;
+
+    const pacienteWhere = busqueda
+      ? {
+          [Op.or]: [
+            { nombre:   { [Op.like]: `%${busqueda}%` } },
+            { apellido: { [Op.like]: `%${busqueda}%` } },
+            { rut:      { [Op.like]: `%${busqueda}%` } },
+          ],
+        }
+      : undefined;
+
+    const recetas = await Receta.findAll({
+      where: { medico_id: medicoId },
+      include: [
+        {
+          model: Paciente,
+          as: 'paciente',
+          attributes: ['id', 'nombre', 'apellido', 'rut', 'fecha_nacimiento', 'prevision_salud'],
+          ...(pacienteWhere ? { where: pacienteWhere } : {}),
+          required: !!busqueda,
+        },
+        { model: RecetaItem, as: 'items' },
+        {
+          model: AtencionMedica,
+          as: 'atencion',
+          attributes: [
+            'id', 'motivo_consulta', 'anamnesis', 'examen_fisico',
+            'diagnostico', 'cie10', 'plan_tratamiento', 'indicaciones',
+            'presion_sistolica', 'presion_diastolica', 'frecuencia_cardiaca',
+            'temperatura', 'peso', 'talla', 'saturacion_oxigeno',
+          ],
+          include: [{ model: Cita, as: 'cita', attributes: ['id', 'fecha_hora', 'motivo'] }],
+        },
+      ],
+      order: [['createdAt', 'DESC']],
+    });
+
+    res.json(recetas);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ message: 'Error al obtener recetas' });
+  }
+};
+
+module.exports = { buscarMedicos, getEspecialidades, getDashboard, getMisCitas, getMisPacientes, getMisRecetas };

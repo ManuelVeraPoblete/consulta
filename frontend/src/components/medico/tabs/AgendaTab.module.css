@@ -10,7 +10,8 @@
 }
 
 .calNav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-.calBtn { background: none; border: 1px solid #e2e8f0; border-radius: 6px; width: 28px; height: 28px; cursor: pointer; font-size: 16px; color: #64748b; }
+.calBtn { background: none; border: 1px solid #e2e8f0; border-radius: 6px; width: 28px; height: 28px; cursor: pointer; font-size: 16px; color: #64748b; display: flex; align-items: center; justify-content: center; line-height: 1; transition: background var(--transition), border-color var(--transition); }
+.calBtn:hover { background: #f1f5f9; border-color: #cbd5e1; }
 .calTitle { font-size: 14px; font-weight: 700; color: #0f172a; }
 
 .calGrid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
@@ -46,7 +47,10 @@
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
+  transition: opacity var(--transition), transform var(--transition);
 }
+.btnNueva:hover { opacity: 0.9; transform: translateY(-1px); }
+.btnNueva:active { transform: translateY(0); }
 
 .citasList { display: flex; flex-direction: column; gap: 4px; }
 
