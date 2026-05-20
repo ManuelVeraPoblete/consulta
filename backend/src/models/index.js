@@ -213,19 +213,13 @@ AgendaBloqueo.belongsTo(User, {
 /**
  * Verifica la conexión a la base de datos.
  *
- * En desarrollo permite sincronizar modelos con alter:true.
- * En producción NO modifica tablas, porque la BD ya fue importada manualmente.
+ * IMPORTANTE:
+ * En Render/TiDB no usamos sequelize.sync({ alter: true }),
+ * porque la base de datos ya fue creada/importada manualmente.
  */
 const syncDatabase = async () => {
   await sequelize.authenticate();
-
-  if (process.env.NODE_ENV !== 'production') {
-    await sequelize.sync({ alter: true });
-    console.log('Base de datos sincronizada en modo desarrollo');
-    return;
-  }
-
-  console.log('Conexión a base de datos verificada en producción');
+  console.log('Conexión a base de datos verificada correctamente');
 };
 
 module.exports = {

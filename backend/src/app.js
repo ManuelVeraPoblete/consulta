@@ -95,6 +95,11 @@ process.on('unhandledRejection', (reason) => {
  * Primero prueba la conexión/sincronización con la BD.
  * Si funciona, recién ahí levanta el servidor.
  */
+console.log('Iniciando backend consulta médica...');
+console.log('Entorno:', process.env.NODE_ENV);
+console.log('Puerto:', PORT);
+console.log('Base de datos:', process.env.DB_NAME);
+console.log('Host BD:', process.env.DB_HOST);
 syncDatabase()
   .then(() => {
     app.listen(PORT, () => {
