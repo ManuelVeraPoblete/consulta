@@ -3,24 +3,20 @@
 import axios from 'axios';
 
 /**
- * URL base de la API.
- *
- * En producción Render usa:
- * VITE_API_URL=https://consulta-api-2g52.onrender.com/api
- *
- * En desarrollo local usa /api, útil si tienes proxy configurado en Vite.
+ * En producción Render usa VITE_API_URL.
+ * En desarrollo local usa /api y Vite lo redirige mediante proxy a localhost:5000.
  */
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 /**
- * Cliente HTTP centralizado para toda la comunicación con el backend.
+ * Cliente HTTP centralizado para comunicar el frontend con el backend.
  */
 const api = axios.create({
   baseURL: API_BASE_URL,
 });
 
 /**
- * Interceptor para agregar el token JWT en cada petición autenticada.
+ * Agrega el token JWT a las peticiones protegidas.
  */
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
@@ -33,7 +29,7 @@ api.interceptors.request.use((config) => {
 });
 
 /**
- * Interceptor para limpiar sesión cuando el backend responde 401.
+ * Si el backend responde 401, limpia la sesión local.
  */
 api.interceptors.response.use(
   (res) => res,
@@ -48,9 +44,6 @@ api.interceptors.response.use(
   }
 );
 
-/**
- * Inicia sesión contra el backend.
- */
 export const login = async (email, password) => {
   const { data } = await api.post('/auth/login', {
     email,
@@ -60,17 +53,11 @@ export const login = async (email, password) => {
   return data;
 };
 
-/**
- * Registra un nuevo usuario.
- */
 export const register = async (userData) => {
   const { data } = await api.post('/auth/register', userData);
   return data;
 };
 
-/**
- * Obtiene el perfil del usuario autenticado.
- */
 export const getProfile = async () => {
   const { data } = await api.get('/auth/profile');
   return data;
