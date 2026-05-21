@@ -7,7 +7,6 @@ const NAV = [
   { id: 'agenda',      label: 'Agenda',               icon: CalIcon },
   { id: 'adminAgenda', label: 'Admin. Agenda',        icon: LockCalIcon },
   { id: 'pacientes',   label: 'Pacientes',            icon: UsersIcon },
-  { id: 'historial',   label: 'Historial clínico',    icon: ClipIcon },
   { id: 'recetas',     label: 'Recetas',              icon: RecetaIcon },
   { id: 'ordenes',     label: 'Órdenes de examen',    icon: FlaskIcon },
   { id: 'config',      label: 'Configuración',        icon: GearIcon },
