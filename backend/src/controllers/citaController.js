@@ -1,6 +1,8 @@
-const { Cita, Paciente, User, MedicoPerfil, Especialidad } = require('../models');
+const { Cita, Paciente, User, MedicoPerfil, Especialidad, SecretariaMedico } = require('../models');
 const { Op } = require('sequelize');
 const { esFechaDisponible } = require('./agendaController');
+
+const ESTADOS_VALIDOS = new Set(['programada', 'confirmada', 'completada', 'cancelada']);
 
 const INCLUDE_FULL = [
   {
@@ -46,13 +48,35 @@ exports.listarCitas = async (req, res) => {
   try {
     const { medico_id, fecha_inicio, fecha_fin, estado } = req.query;
     const where = {};
-    if (medico_id) where.medico_id = medico_id;
-    if (estado)    where.estado    = estado;
+
+    if (estado) {
+      if (!ESTADOS_VALIDOS.has(estado)) {
+        return res.status(400).json({ message: 'Estado inválido' });
+      }
+      where.estado = estado;
+    }
+
+    if (req.user.rol === 'secretaria') {
+      const asig = await SecretariaMedico.findAll({ where: { secretaria_id: req.user.id } });
+      const medicoIds = asig.map(a => a.medico_id);
+      if (medico_id) {
+        if (!medicoIds.includes(Number(medico_id))) {
+          return res.status(403).json({ message: 'Médico no asignado a esta secretaria' });
+        }
+        where.medico_id = medico_id;
+      } else {
+        where.medico_id = { [Op.in]: medicoIds };
+      }
+    } else {
+      if (medico_id) where.medico_id = medico_id;
+    }
+
     if (fecha_inicio || fecha_fin) {
       where.fecha_hora = {};
       if (fecha_inicio) where.fecha_hora[Op.gte] = new Date(fecha_inicio);
       if (fecha_fin)    where.fecha_hora[Op.lte]  = new Date(fecha_fin);
     }
+
     const citas = await Cita.findAll({ where, include: INCLUDE_FULL, order: [['fecha_hora','ASC']] });
     res.json(citas);
   } catch (e) {

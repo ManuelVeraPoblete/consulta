@@ -1,4 +1,4 @@
-const { AtencionMedica, Cita, Paciente, User, MedicoPerfil, Especialidad, Receta, RecetaItem } = require('../models');
+const { AtencionMedica, Cita, Paciente, User, MedicoPerfil, Especialidad, Receta, RecetaItem, SecretariaMedico } = require('../models');
 
 const INCLUDE_FULL = [
   { model: Paciente, as: 'paciente', attributes: ['id','nombre','apellido','rut','fecha_nacimiento','telefono','prevision_salud','alergias','antecedentes'] },
@@ -91,6 +91,15 @@ exports.getAtencionByCita = async (req, res) => {
       include: INCLUDE_FULL,
     });
     if (!atencion) return res.status(404).json({ message: 'Atención no encontrada' });
+
+    if (req.user.rol === 'medico' && atencion.medico_id !== req.user.id) {
+      return res.status(403).json({ message: 'Acceso denegado' });
+    }
+    if (req.user.rol === 'secretaria') {
+      const asig = await SecretariaMedico.findOne({ where: { secretaria_id: req.user.id, medico_id: atencion.medico_id } });
+      if (!asig) return res.status(403).json({ message: 'Acceso denegado' });
+    }
+
     res.json(atencion);
   } catch (e) {
     res.status(500).json({ message: 'Error al obtener atención' });
@@ -104,6 +113,15 @@ exports.getRecetaByAtencion = async (req, res) => {
       include: [{ model: RecetaItem, as: 'items' }],
     });
     if (!receta) return res.status(404).json({ message: 'Sin receta' });
+
+    if (req.user.rol === 'medico' && receta.medico_id !== req.user.id) {
+      return res.status(403).json({ message: 'Acceso denegado' });
+    }
+    if (req.user.rol === 'secretaria') {
+      const asig = await SecretariaMedico.findOne({ where: { secretaria_id: req.user.id, medico_id: receta.medico_id } });
+      if (!asig) return res.status(403).json({ message: 'Acceso denegado' });
+    }
+
     res.json(receta);
   } catch (e) {
     res.status(500).json({ message: 'Error al obtener receta' });
@@ -112,8 +130,25 @@ exports.getRecetaByAtencion = async (req, res) => {
 
 exports.getHistorialPaciente = async (req, res) => {
   try {
+    const pacienteId = req.params.pacienteId;
+
+    if (req.user.rol === 'medico') {
+      const tieneCita = await Cita.findOne({
+        where: { medico_id: req.user.id, paciente_id: pacienteId },
+      });
+      if (!tieneCita) return res.status(403).json({ message: 'Acceso denegado' });
+    }
+    if (req.user.rol === 'secretaria') {
+      const asig = await SecretariaMedico.findAll({ where: { secretaria_id: req.user.id } });
+      const medicoIds = asig.map(a => a.medico_id);
+      const tieneCita = medicoIds.length
+        ? await Cita.findOne({ where: { medico_id: medicoIds, paciente_id: pacienteId } })
+        : null;
+      if (!tieneCita) return res.status(403).json({ message: 'Acceso denegado' });
+    }
+
     const atenciones = await AtencionMedica.findAll({
-      where: { paciente_id: req.params.pacienteId },
+      where: { paciente_id: pacienteId },
       include: INCLUDE_FULL,
       order: [['createdAt', 'DESC']],
     });

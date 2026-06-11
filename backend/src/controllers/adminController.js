@@ -341,8 +341,8 @@ const actualizarMedicosSecretaria = async (req, res) => {
       }],
     });
     res.json({ usuario: resultado, message: 'Médicos actualizados' });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+  } catch {
+    res.status(500).json({ message: 'Error al actualizar médicos de la secretaria' });
   }
 };
 

@@ -10,19 +10,21 @@ router.get('/buscar', authenticate, async (req, res) => {
     const q = (req.query.q || '').trim();
     if (q.length < 2) return res.json([]);
 
-    const results = await Medicamento.findAll({
-      where: {
-        nombre: { [Op.like]: `%${q}%` },
-        activo: true,
-      },
+    const rows = await Medicamento.findAll({
+      where: { nombre: { [Op.like]: `%${q}%` }, activo: true },
       attributes: ['id', 'nombre', 'numero_registro'],
-      order: [
-        // Primero los que empiezan con el término buscado
-        [Medicamento.sequelize.literal(`CASE WHEN nombre LIKE '${q.replace(/'/g, "''")}%' THEN 0 ELSE 1 END`), 'ASC'],
-        ['nombre', 'ASC'],
-      ],
-      limit: 10,
+      order: [['nombre', 'ASC']],
+      limit: 50,
     });
+
+    const qLow = q.toLowerCase();
+    const results = rows
+      .sort((a, b) => {
+        const aStarts = a.nombre.toLowerCase().startsWith(qLow) ? 0 : 1;
+        const bStarts = b.nombre.toLowerCase().startsWith(qLow) ? 0 : 1;
+        return aStarts - bStarts || a.nombre.localeCompare(b.nombre);
+      })
+      .slice(0, 10);
 
     res.json(results);
   } catch (e) {
