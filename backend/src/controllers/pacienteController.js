@@ -4,7 +4,11 @@ const { Op } = require('sequelize');
 /* ── Listar ── */
 exports.listarPacientes = async (req, res) => {
   try {
-    const { busqueda, activo } = req.query;
+    const { activo } = req.query;
+    const busqueda = req.query.busqueda?.slice(0, 100);
+    const page  = Math.max(1, parseInt(req.query.page,  10) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit, 10) || 50));
+
     const where = {};
     if (activo !== undefined && activo !== '') where.activo = activo === 'true';
     if (busqueda) {
@@ -15,8 +19,13 @@ exports.listarPacientes = async (req, res) => {
         { email:    { [Op.like]: `%${busqueda}%` } },
       ];
     }
-    const pacientes = await Paciente.findAll({ where, order: [['apellido','ASC'],['nombre','ASC']] });
-    res.json(pacientes);
+    const { count, rows: pacientes } = await Paciente.findAndCountAll({
+      where,
+      order: [['apellido','ASC'],['nombre','ASC']],
+      limit,
+      offset: (page - 1) * limit,
+    });
+    res.json({ total: count, page, limit, pacientes });
   } catch (e) {
     console.error(e);
     res.status(500).json({ message: 'Error al listar pacientes' });
@@ -78,12 +87,27 @@ exports.crearPaciente = async (req, res) => {
   }
 };
 
+const CAMPOS_ACTUALIZABLES = [
+  'nombre', 'apellido', 'rut', 'fecha_nacimiento', 'genero',
+  'telefono', 'email', 'direccion', 'ciudad',
+  'prevision_salud', 'nombre_isapre', 'numero_fonasa',
+  'prevision_social', 'nombre_afp',
+  'grupo_sanguineo', 'alergias', 'antecedentes',
+  'contacto_emergencia_nombre', 'contacto_emergencia_telefono',
+];
+
 /* ── Actualizar ── */
 exports.actualizarPaciente = async (req, res) => {
   try {
     const p = await Paciente.findByPk(req.params.id);
     if (!p) return res.status(404).json({ message: 'Paciente no encontrado' });
-    await p.update(req.body);
+
+    const datos = {};
+    for (const campo of CAMPOS_ACTUALIZABLES) {
+      if (req.body[campo] !== undefined) datos[campo] = req.body[campo];
+    }
+
+    await p.update(datos);
     res.json(p);
   } catch (e) {
     res.status(500).json({ message: 'Error al actualizar paciente' });

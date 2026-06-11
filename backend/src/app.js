@@ -4,6 +4,8 @@ require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 
 const { syncDatabase } = require('./models');
 
@@ -30,6 +32,8 @@ const PORT = process.env.PORT || 5000;
  */
 const corsOrigin = process.env.CORS_ORIGIN || 'http://localhost:5173';
 
+app.use(helmet());
+
 app.use(
   cors({
     origin: corsOrigin,
@@ -37,8 +41,28 @@ app.use(
   })
 );
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+const limiterGeneral = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 200,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: 'Demasiadas solicitudes, intenta más tarde' },
+});
+
+const limiterAuth = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: 'Demasiados intentos de autenticación, intenta más tarde' },
+});
+
+app.use('/api/', limiterGeneral);
+app.use('/api/auth/login', limiterAuth);
+app.use('/api/auth/register', limiterAuth);
+
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
 /**
  * Rutas principales de la API.
@@ -98,13 +122,10 @@ process.on('unhandledRejection', (reason) => {
 console.log('Iniciando backend consulta médica...');
 console.log('Entorno:', process.env.NODE_ENV);
 console.log('Puerto:', PORT);
-console.log('Base de datos:', process.env.DB_NAME);
-console.log('Host BD:', process.env.DB_HOST);
 syncDatabase()
   .then(() => {
     app.listen(PORT, () => {
       console.log(`Servidor corriendo en puerto ${PORT}`);
-      console.log(`CORS habilitado para: ${corsOrigin}`);
     });
   })
   .catch((err) => {

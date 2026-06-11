@@ -31,7 +31,13 @@ const login = async (email, password) => {
   return { token, user };
 };
 
+const ROLES_PUBLICOS = ['paciente'];
+
 const register = async ({ nombre, apellido, email, password, rol }) => {
+  if (!ROLES_PUBLICOS.includes(rol)) {
+    throw new Error('Registro no permitido para este rol');
+  }
+
   const exists = await User.findOne({ where: { email } });
   if (exists) throw new Error('El correo ya está registrado');
 

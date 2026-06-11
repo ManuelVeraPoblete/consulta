@@ -101,7 +101,10 @@ const crearMedico = async (req, res) => {
 
     res.status(201).json({ usuario: resultado, message: 'Médico creado exitosamente' });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    const msg = /ya (está|existe)|requerido|inválido/i.test(error.message)
+      ? error.message
+      : 'Error al crear médico';
+    res.status(400).json({ message: msg });
   }
 };
 
@@ -150,7 +153,10 @@ const crearUsuario = async (req, res) => {
 
     res.status(201).json({ usuario: resultado, message: 'Usuario creado exitosamente' });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    const msg = /ya (está|existe)|requerido|inválido/i.test(error.message)
+      ? error.message
+      : 'Error al crear usuario';
+    res.status(400).json({ message: msg });
   }
 };
 
@@ -230,7 +236,10 @@ const actualizarUsuario = async (req, res) => {
     });
     res.json({ usuario: resultado, message: 'Usuario actualizado exitosamente' });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    const msg = /ya (está|existe)|requerido|inválido/i.test(error.message)
+      ? error.message
+      : 'Error al actualizar usuario';
+    res.status(400).json({ message: msg });
   }
 };
 
@@ -304,7 +313,10 @@ const crearSecretaria = async (req, res) => {
 
     res.status(201).json({ usuario: resultado, message: 'Secretaria creada exitosamente' });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    const msg = /ya (está|existe)|requerido|inválido/i.test(error.message)
+      ? error.message
+      : 'Error al crear secretaria';
+    res.status(400).json({ message: msg });
   }
 };
 

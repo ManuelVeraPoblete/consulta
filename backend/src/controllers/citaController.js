@@ -88,6 +88,8 @@ exports.cancelarCita = async (req, res) => {
   try {
     const c = await Cita.findByPk(req.params.id);
     if (!c) return res.status(404).json({ message: 'Cita no encontrada' });
+    if (c.estado === 'cancelada')
+      return res.status(400).json({ message: 'La cita ya está cancelada' });
     await c.update({ estado: 'cancelada' });
     res.json({ message: 'Cita cancelada' });
   } catch (e) {

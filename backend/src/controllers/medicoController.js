@@ -171,21 +171,26 @@ const getMisPacientes = async (req, res) => {
       where,
       attributes: ['id', 'nombre', 'apellido', 'rut', 'fecha_nacimiento', 'prevision_salud', 'activo'],
       order: [['apellido', 'ASC'], ['nombre', 'ASC']],
+      include: [{
+        model: AtencionMedica,
+        as: 'atenciones',
+        where: { medico_id: medicoId },
+        attributes: ['paciente_id', 'diagnostico', 'createdAt'],
+        required: false,
+        separate: true,
+        order: [['createdAt', 'DESC']],
+      }],
     });
 
-    const result = await Promise.all(pacientes.map(async (p) => {
-      const ultimaAtencion = await AtencionMedica.findOne({
-        where: { medico_id: medicoId, paciente_id: p.id },
-        order: [['createdAt', 'DESC']],
-        attributes: ['diagnostico', 'createdAt'],
-      });
-
+    const result = pacientes.map((p) => {
+      const ultima = p.atenciones?.[0] ?? null;
       return {
         ...p.toJSON(),
-        ultimaAtencion: ultimaAtencion?.createdAt ?? null,
-        diagnostico:    ultimaAtencion?.diagnostico ?? null,
+        ultimaAtencion: ultima?.createdAt ?? null,
+        diagnostico:    ultima?.diagnostico ?? null,
+        atenciones: undefined,
       };
-    }));
+    });
 
     res.json({ pacientes: result });
   } catch (e) {

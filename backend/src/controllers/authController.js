@@ -1,16 +1,21 @@
 const authService = require('../services/authService');
 const { User, MedicoPerfil, Especialidad } = require('../models');
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
       return res.status(400).json({ message: 'Email y contraseña son requeridos' });
     }
+    if (!EMAIL_RE.test(email)) {
+      return res.status(400).json({ message: 'Email inválido' });
+    }
     const { token, user } = await authService.login(email, password);
     res.json({ token, user, message: 'Login exitoso' });
-  } catch (error) {
-    res.status(401).json({ message: error.message });
+  } catch {
+    res.status(401).json({ message: 'Credenciales inválidas' });
   }
 };
 
@@ -20,10 +25,19 @@ const register = async (req, res) => {
     if (!nombre || !apellido || !email || !password || !rol) {
       return res.status(400).json({ message: 'Todos los campos son requeridos' });
     }
+    if (!EMAIL_RE.test(email)) {
+      return res.status(400).json({ message: 'Email inválido' });
+    }
+    if (password.length < 8) {
+      return res.status(400).json({ message: 'La contraseña debe tener al menos 8 caracteres' });
+    }
     const { token, user } = await authService.register({ nombre, apellido, email, password, rol });
     res.status(201).json({ token, user, message: 'Usuario registrado exitosamente' });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    const msg = error.message === 'El correo ya está registrado' || error.message === 'Registro no permitido para este rol'
+      ? error.message
+      : 'Error al registrar usuario';
+    res.status(400).json({ message: msg });
   }
 };
 
