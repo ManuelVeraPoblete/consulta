@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import { login as loginService, register as registerService, getProfile } from '../services/authService';
+import { login as loginService, register as registerService, getProfile, logoutApi } from '../services/authService';
 
 const AuthContext = createContext(null);
 
@@ -10,7 +10,6 @@ export const AuthProvider = ({ children }) => {
       return stored ? JSON.parse(stored) : null;
     } catch {
       localStorage.removeItem('user');
-      localStorage.removeItem('token');
       return null;
     }
   });
@@ -19,15 +18,12 @@ export const AuthProvider = ({ children }) => {
 
   // Refrescar datos del usuario desde el servidor al cargar (para capturar nuevos campos del perfil)
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) return;
+    if (!user) return;
     getProfile().then(data => {
       const refreshed = data.user;
       localStorage.setItem('user', JSON.stringify(refreshed));
       setUser(refreshed);
     }).catch(() => {
-      // Si el token expiró o es inválido, limpiar sesión
-      localStorage.removeItem('token');
       localStorage.removeItem('user');
       setUser(null);
     });
@@ -38,7 +34,6 @@ export const AuthProvider = ({ children }) => {
     setError(null);
     try {
       const data = await loginService(email, password);
-      localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
       setUser(data.user);
       return data.user;
@@ -56,7 +51,6 @@ export const AuthProvider = ({ children }) => {
     setError(null);
     try {
       const data = await registerService(userData);
-      localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
       setUser(data.user);
       return data.user;
@@ -70,7 +64,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const logout = useCallback(() => {
-    localStorage.removeItem('token');
+    logoutApi().catch(() => {});
     localStorage.removeItem('user');
     setUser(null);
     setError(null);

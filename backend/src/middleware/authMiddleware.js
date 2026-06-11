@@ -2,12 +2,14 @@ const { verifyToken } = require('../services/authService');
 const { User } = require('../models');
 
 const authenticate = async (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  const cookieToken = req.cookies?.authToken;
+  const authHeader  = req.headers.authorization;
+  const token       = cookieToken ?? (authHeader?.startsWith('Bearer ') ? authHeader.split(' ')[1] : null);
+
+  if (!token) {
     return res.status(401).json({ message: 'Token no proporcionado' });
   }
   try {
-    const token = authHeader.split(' ')[1];
     const payload = verifyToken(token);
 
     const user = await User.findByPk(payload.id, { attributes: ['id', 'email', 'rol', 'activo'] });

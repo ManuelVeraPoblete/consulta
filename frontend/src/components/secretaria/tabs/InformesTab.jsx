@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getInformeDiario, getMisMedicos } from '../../../services/secretariaService';
 import styles from './InformesTab.module.css';
+import { esc } from '../../../utils/escapeHtml';
 
 /* ── Utilidades ── */
 const MESES      = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
@@ -118,10 +119,10 @@ const generarPDF = (informe, medico) => {
   const particularGrupos= grupos.filter(g => g.tipo === 'particular');
 
   const fila = (nombre, atenciones, total, cls = '') => `
-    <tr class="${cls}">
-      <td>${nombre}</td>
-      <td class="center">${atenciones}</td>
-      <td class="right">${fmtMoneda(total)}</td>
+    <tr class="${esc(cls)}">
+      <td>${esc(nombre)}</td>
+      <td class="center">${esc(atenciones)}</td>
+      <td class="right">${esc(fmtMoneda(total))}</td>
     </tr>`;
 
   let cuerpo = '';
@@ -145,7 +146,7 @@ const generarPDF = (informe, medico) => {
   }
 
   const medicoLinea = medico
-    ? `Dr. ${medico.nombre} ${medico.apellido}${medico.especialidad ? ` — ${medico.especialidad}` : ''}`
+    ? `Dr. ${esc(medico.nombre)} ${esc(medico.apellido)}${medico.especialidad ? ` — ${esc(medico.especialidad)}` : ''}`
     : 'Todos los médicos';
 
   const periodoLinea = fechaInicio === fechaFin
@@ -224,9 +225,10 @@ const generarPDF = (informe, medico) => {
 </body>
 </html>`;
 
-  const w = window.open('', '_blank', 'width=820,height=700');
-  w.document.write(html);
-  w.document.close();
+  const blob = new Blob([html], { type: 'text/html' });
+  const url  = URL.createObjectURL(blob);
+  window.open(url, '_blank', 'width=820,height=700,noopener,noreferrer');
+  setTimeout(() => URL.revokeObjectURL(url), 30000);
 };
 
 /* ── Componente principal ── */

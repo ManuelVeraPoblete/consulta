@@ -13,19 +13,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
  */
 const api = axios.create({
   baseURL: API_BASE_URL,
-});
-
-/**
- * Agrega el token JWT a las peticiones protegidas.
- */
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-
-  return config;
+  withCredentials: true,
 });
 
 /**
@@ -35,7 +23,6 @@ api.interceptors.response.use(
   (res) => res,
   (err) => {
     if (err.response?.status === 401) {
-      localStorage.removeItem('token');
       localStorage.removeItem('user');
       window.location.href = '/';
     }
@@ -61,6 +48,10 @@ export const register = async (userData) => {
 export const getProfile = async () => {
   const { data } = await api.get('/auth/profile');
   return data;
+};
+
+export const logoutApi = async () => {
+  await api.post('/auth/logout');
 };
 
 export default api;

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { getMisRecetas } from '../../../services/medicoService';
 import { useAuth } from '../../../context/AuthContext';
 import styles from './RecetasTab.module.css';
+import { esc } from '../../../utils/escapeHtml';
 
 /* ── Helpers ───────────────────────────────────────────────── */
 
@@ -72,19 +73,19 @@ const imprimirReceta = (receta, doctor) => {
 <body>
   <div class="top">
     <div>
-      ${docNombre    ? `<div class="doc-nombre">${docNombre}</div>` : '<div class="doc-nombre">Consulta Médica Online</div>'}
-      ${docTitulo    ? `<div class="doc-titulo">${docTitulo}</div>` : ''}
-      ${docEsp       ? `<div class="doc-esp">${docEsp}</div>` : ''}
-      ${docRegistro  ? `<div class="doc-reg">${docRegistro}</div>` : ''}
+      ${docNombre    ? `<div class="doc-nombre">${esc(docNombre)}</div>` : '<div class="doc-nombre">Consulta Médica Online</div>'}
+      ${docTitulo    ? `<div class="doc-titulo">${esc(docTitulo)}</div>` : ''}
+      ${docEsp       ? `<div class="doc-esp">${esc(docEsp)}</div>` : ''}
+      ${docRegistro  ? `<div class="doc-reg">${esc(docRegistro)}</div>` : ''}
       ${(docDireccion || docTelefono) ? `
         <div class="doc-contacto">
-          ${docDireccion ? `📍 ${docDireccion}<br>` : ''}
-          ${docTelefono  ? `📞 ${docTelefono}` : ''}
+          ${docDireccion ? `📍 ${esc(docDireccion)}<br>` : ''}
+          ${docTelefono  ? `📞 ${esc(docTelefono)}` : ''}
         </div>` : ''}
     </div>
     <div class="fecha-box">
       <strong>Fecha de atención</strong>
-      ${fmtFecha(fecha)}
+      ${esc(fmtFecha(fecha))}
     </div>
   </div>
 
@@ -92,20 +93,20 @@ const imprimirReceta = (receta, doctor) => {
 
   <div class="pac">
     <div class="pac-lbl">Paciente</div>
-    <div class="pac-nombre">${p?.nombre ?? ''} ${p?.apellido ?? ''}</div>
-    <div class="pac-sub">${p?.rut ? `RUT: ${p.rut}` : ''}${p?.prevision_salud ? ` &nbsp;·&nbsp; ${p.prevision_salud.toUpperCase()}` : ''}</div>
+    <div class="pac-nombre">${esc(p?.nombre ?? '')} ${esc(p?.apellido ?? '')}</div>
+    <div class="pac-sub">${p?.rut ? `RUT: ${esc(p.rut)}` : ''}${p?.prevision_salud ? ` &nbsp;·&nbsp; ${esc(p.prevision_salud.toUpperCase())}` : ''}</div>
   </div>
 
   <div class="items">
     ${items.map((it, i) => `
       <div class="item">
         <div class="item-n">Medicamento ${i + 1}</div>
-        <div class="item-med">${it.medicamento}</div>
+        <div class="item-med">${esc(it.medicamento)}</div>
         <div class="item-det">
-          ${it.dosis        ? `Dosis: ${it.dosis}<br>` : ''}
-          ${it.frecuencia   ? `Frecuencia: ${it.frecuencia}<br>` : ''}
-          ${it.duracion     ? `Duración: ${it.duracion}<br>` : ''}
-          ${it.indicaciones ? `Indicaciones: ${it.indicaciones}` : ''}
+          ${it.dosis        ? `Dosis: ${esc(it.dosis)}<br>` : ''}
+          ${it.frecuencia   ? `Frecuencia: ${esc(it.frecuencia)}<br>` : ''}
+          ${it.duracion     ? `Duración: ${esc(it.duracion)}<br>` : ''}
+          ${it.indicaciones ? `Indicaciones: ${esc(it.indicaciones)}` : ''}
         </div>
       </div>`).join('')}
   </div>
@@ -113,25 +114,25 @@ const imprimirReceta = (receta, doctor) => {
   ${receta.observaciones ? `
     <div class="obs">
       <div class="obs-lbl">Observaciones</div>
-      <div class="obs-txt">${receta.observaciones}</div>
+      <div class="obs-txt">${esc(receta.observaciones)}</div>
     </div>` : ''}
 
   <div class="firma">
     <div>
       <div class="firma-linea">_________________________________</div>
-      <div class="firma-nombre">${docNombre}</div>
-      ${docRegistro ? `<div class="firma-reg">${docRegistro}</div>` : ''}
+      <div class="firma-nombre">${esc(docNombre)}</div>
+      ${docRegistro ? `<div class="firma-reg">${esc(docRegistro)}</div>` : ''}
     </div>
-    ${docEsp ? `<div style="font-size:11.5px;color:#64748b;text-align:right">${docEsp}</div>` : ''}
+    ${docEsp ? `<div style="font-size:11.5px;color:#64748b;text-align:right">${esc(docEsp)}</div>` : ''}
   </div>
+  <script>window.onload = function () { window.focus(); window.print(); };</script>
 </body>
 </html>`;
 
-  const win = window.open('', '_blank', 'width=720,height=940');
-  win.document.write(html);
-  win.document.close();
-  win.focus();
-  setTimeout(() => win.print(), 400);
+  const blob = new Blob([html], { type: 'text/html' });
+  const url  = URL.createObjectURL(blob);
+  window.open(url, '_blank', 'width=720,height=940,noopener,noreferrer');
+  setTimeout(() => URL.revokeObjectURL(url), 30000);
 };
 
 /* ── Modal detalle de atención ─────────────────────────────── */

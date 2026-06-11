@@ -3,6 +3,7 @@ import { crearAtencion } from '../../services/medicoService';
 import { useAuth } from '../../context/AuthContext';
 import MedicamentoInput from './MedicamentoInput';
 import styles from './AtenderModal.module.css';
+import { esc } from '../../utils/escapeHtml';
 
 const EMPTY = {
   peso: '', talla: '',
@@ -225,24 +226,24 @@ const AtenderModal = ({ cita, onClose, onAtendida }) => {
 
   <!-- CABECERA -->
   <div class="cabecera">
-    <div class="cab-nombre">Dr. ${docNombre}</div>
-    <div class="cab-esp">${especialidad}</div>
+    <div class="cab-nombre">Dr. ${esc(docNombre)}</div>
+    <div class="cab-esp">${esc(especialidad)}</div>
     <div class="cab-info">
-      ${rutMedico   ? `RUT: ${rutMedico}<br>` : ''}
-      ${numRegistro ? `Registro Superintendencia: ${numRegistro}<br>` : ''}
-      ${direccionConsulta ? `Dirección: ${direccionConsulta}<br>` : ''}
-      ${telefonoConsulta  ? `Teléfono: ${telefonoConsulta}` : ''}
+      ${rutMedico   ? `RUT: ${esc(rutMedico)}<br>` : ''}
+      ${numRegistro ? `Registro Superintendencia: ${esc(numRegistro)}<br>` : ''}
+      ${direccionConsulta ? `Dirección: ${esc(direccionConsulta)}<br>` : ''}
+      ${telefonoConsulta  ? `Teléfono: ${esc(telefonoConsulta)}` : ''}
     </div>
   </div>
 
   <!-- FECHA Y PACIENTE -->
   <div class="campo-linea">
     <span class="campo-etiqueta">Fecha:</span>
-    <span class="campo-valor">${fechaStr}</span>
+    <span class="campo-valor">${esc(fechaStr)}</span>
   </div>
   <div class="campo-linea">
     <span class="campo-etiqueta">Paciente:</span>
-    <span class="campo-valor">${paciente?.nombre ?? ''} ${paciente?.apellido ?? ''}${edad !== null ? ` (${edad} años)` : ''}</span>
+    <span class="campo-valor">${esc(paciente?.nombre ?? '')} ${esc(paciente?.apellido ?? '')}${edad !== null ? ` (${esc(edad)} años)` : ''}</span>
   </div>
 
   <hr class="sep">
@@ -253,42 +254,41 @@ const AtenderModal = ({ cita, onClose, onAtendida }) => {
   <!-- MEDICAMENTOS -->
   ${itemsValidos.map((item, idx) => `
   <div class="med-item">
-    <div class="med-nombre">${idx + 1}.&nbsp;&nbsp;${item.medicamento}${item.dosis ? ' ' + item.dosis : ''}</div>
+    <div class="med-nombre">${idx + 1}.&nbsp;&nbsp;${esc(item.medicamento)}${item.dosis ? ' ' + esc(item.dosis) : ''}</div>
     <div class="med-detalle">
-      ${[item.frecuencia, item.duracion].filter(Boolean).join(' por ')}${[item.frecuencia, item.duracion].some(Boolean) ? '.' : ''}
-      ${item.indicaciones ? '<br>' + item.indicaciones + '.' : ''}
+      ${[item.frecuencia, item.duracion].filter(Boolean).map(esc).join(' por ')}${[item.frecuencia, item.duracion].some(Boolean) ? '.' : ''}
+      ${item.indicaciones ? '<br>' + esc(item.indicaciones) + '.' : ''}
     </div>
   </div>`).join('')}
 
   <!-- INDICACIÓN GENERAL -->
-  ${recetaObs.trim() ? `<div class="indicacion-box"><em>Indicación:</em> ${recetaObs}</div>` : ''}
+  ${recetaObs.trim() ? `<div class="indicacion-box"><em>Indicación:</em> ${esc(recetaObs)}</div>` : ''}
 
   <!-- PIE: FIRMA + SELLO -->
   <div class="pie">
     <div class="firma-bloque">
       <div class="firma-espacio"></div>
-      <div class="firma-nombre">Dr. ${docNombre}</div>
-      <div class="firma-sub">${especialidad}${rutMedico ? '<br>RUT: ' + rutMedico : ''}</div>
+      <div class="firma-nombre">Dr. ${esc(docNombre)}</div>
+      <div class="firma-sub">${esc(especialidad)}${rutMedico ? '<br>RUT: ' + esc(rutMedico) : ''}</div>
     </div>
     <div class="sello">
       <div class="sello-star">★</div>
-      <div class="sello-nombre">Dr. ${docNombre}</div>
-      <div class="sello-rut">${rutMedico}</div>
-      <div class="sello-esp">${especialidad}</div>
+      <div class="sello-nombre">Dr. ${esc(docNombre)}</div>
+      <div class="sello-rut">${esc(rutMedico)}</div>
+      <div class="sello-esp">${esc(especialidad)}</div>
       <div class="sello-star">★</div>
     </div>
   </div>
 
   <div class="footer">Receta válida por 30 días desde la fecha de emisión</div>
-
+  <script>window.onload = function () { window.focus(); window.print(); };</script>
 </body>
 </html>`;
 
-    const w = window.open('', '_blank', 'width=600,height=860');
-    w.document.write(html);
-    w.document.close();
-    w.focus();
-    setTimeout(() => w.print(), 350);
+    const blob = new Blob([html], { type: 'text/html' });
+    const url  = URL.createObjectURL(blob);
+    window.open(url, '_blank', 'width=600,height=860,noopener,noreferrer');
+    setTimeout(() => URL.revokeObjectURL(url), 30000);
   };
 
   const handleSubmit = async (e) => {

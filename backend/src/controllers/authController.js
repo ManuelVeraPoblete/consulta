@@ -2,6 +2,17 @@ const authService = require('../services/authService');
 const { User, MedicoPerfil, Especialidad } = require('../models');
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const IS_PROD  = process.env.NODE_ENV === 'production';
+
+const COOKIE_OPTS = {
+  httpOnly: true,
+  secure:   IS_PROD,
+  sameSite: IS_PROD ? 'strict' : 'lax',
+  path:     '/',
+  maxAge:   24 * 60 * 60 * 1000,
+};
+
+const setAuthCookie = (res, token) => res.cookie('authToken', token, COOKIE_OPTS);
 
 const login = async (req, res) => {
   try {
@@ -13,7 +24,8 @@ const login = async (req, res) => {
       return res.status(400).json({ message: 'Email inválido' });
     }
     const { token, user } = await authService.login(email, password);
-    res.json({ token, user, message: 'Login exitoso' });
+    setAuthCookie(res, token);
+    res.json({ user, message: 'Login exitoso' });
   } catch {
     res.status(401).json({ message: 'Credenciales inválidas' });
   }
@@ -32,13 +44,19 @@ const register = async (req, res) => {
       return res.status(400).json({ message: 'La contraseña debe tener al menos 8 caracteres' });
     }
     const { token, user } = await authService.register({ nombre, apellido, email, password, rol });
-    res.status(201).json({ token, user, message: 'Usuario registrado exitosamente' });
+    setAuthCookie(res, token);
+    res.status(201).json({ user, message: 'Usuario registrado exitosamente' });
   } catch (error) {
     const msg = error.message === 'El correo ya está registrado' || error.message === 'Registro no permitido para este rol'
       ? error.message
       : 'Error al registrar usuario';
     res.status(400).json({ message: msg });
   }
+};
+
+const logout = (req, res) => {
+  res.clearCookie('authToken', { path: '/' });
+  res.json({ message: 'Sesión cerrada' });
 };
 
 const getProfile = async (req, res) => {
@@ -58,4 +76,4 @@ const getProfile = async (req, res) => {
   }
 };
 
-module.exports = { login, register, getProfile };
+module.exports = { login, register, getProfile, logout };
