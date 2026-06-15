@@ -9,4 +9,7 @@ router.post('/',               authenticate, adminOsec, ctrl.crearCita);
 router.patch('/:id/reagendar', authenticate, adminOsec, ctrl.reagendarCita);
 router.patch('/:id/cancelar',  authenticate, adminOsec, ctrl.cancelarCita);
 
+// Paciente solicita cita directamente (vinculación por RUT)
+router.post('/solicitud', authenticate, authorize('paciente'), ctrl.solicitarCita);
+
 module.exports = router;

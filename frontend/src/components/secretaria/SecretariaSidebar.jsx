@@ -125,4 +125,17 @@ function GearIcon({ active }) {
   );
 }
 
+function BotIcon({ active }) {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+      stroke={active ? '#60a5fa' : 'rgba(255,255,255,0.55)'} strokeWidth="2">
+      <rect x="3" y="11" width="18" height="10" rx="2" ry="2"/>
+      <path d="M12 11V7"/>
+      <circle cx="12" cy="5" r="2"/>
+      <line x1="8" y1="15" x2="8" y2="17"/>
+      <line x1="16" y1="15" x2="16" y2="17"/>
+    </svg>
+  );
+}
+
 export default SecretariaSidebar;

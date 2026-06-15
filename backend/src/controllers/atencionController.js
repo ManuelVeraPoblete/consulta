@@ -1,4 +1,5 @@
 const { AtencionMedica, Cita, Paciente, User, MedicoPerfil, Especialidad, Receta, RecetaItem, SecretariaMedico } = require('../models');
+const { Op } = require('sequelize');
 
 const INCLUDE_FULL = [
   { model: Paciente, as: 'paciente', attributes: ['id','nombre','apellido','rut','fecha_nacimiento','telefono','prevision_salud','alergias','antecedentes'] },
@@ -142,7 +143,7 @@ exports.getHistorialPaciente = async (req, res) => {
       const asig = await SecretariaMedico.findAll({ where: { secretaria_id: req.user.id } });
       const medicoIds = asig.map(a => a.medico_id);
       const tieneCita = medicoIds.length
-        ? await Cita.findOne({ where: { medico_id: medicoIds, paciente_id: pacienteId } })
+        ? await Cita.findOne({ where: { medico_id: { [Op.in]: medicoIds }, paciente_id: pacienteId } })
         : null;
       if (!tieneCita) return res.status(403).json({ message: 'Acceso denegado' });
     }

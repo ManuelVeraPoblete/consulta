@@ -118,6 +118,9 @@ const crearUsuario = async (req, res) => {
     if (!Object.values(ROLES).includes(rol)) {
       return res.status(400).json({ message: 'Rol inválido' });
     }
+    if (password.length < 8) {
+      return res.status(400).json({ message: 'La contraseña debe tener al menos 8 caracteres' });
+    }
 
     if (rut) {
       const rutExiste = await User.findOne({ where: { rut } });

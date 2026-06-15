@@ -12,12 +12,12 @@ const authenticate = async (req, res, next) => {
   try {
     const payload = verifyToken(token);
 
-    const user = await User.findByPk(payload.id, { attributes: ['id', 'email', 'rol', 'activo'] });
+    const user = await User.findByPk(payload.id, { attributes: ['id', 'email', 'rol', 'rut', 'activo'] });
     if (!user || !user.activo) {
       return res.status(401).json({ message: 'Cuenta desactivada o no encontrada' });
     }
 
-    req.user = { id: user.id, email: user.email, rol: user.rol };
+    req.user = { id: user.id, email: user.email, rol: user.rol, rut: user.rut ?? null };
     next();
   } catch {
     res.status(401).json({ message: 'Token inválido o expirado' });

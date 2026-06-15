@@ -3,10 +3,10 @@ import { useAuth } from '../../context/AuthContext';
 import styles from './AdminSidebar.module.css';
 
 const NAV = [
-  { id: 'inicio',      label: 'Inicio',       icon: HomeIcon },
-  { id: 'usuarios',    label: 'Usuarios',     icon: UsersIcon },
-  { id: 'medicos',     label: 'Médicos',      icon: StethIcon },
-  { id: 'secretarias', label: 'Secretarias',  icon: SecretIcon },
+  { id: 'inicio',      label: 'Inicio',        icon: HomeIcon },
+  { id: 'usuarios',    label: 'Usuarios',      icon: UsersIcon },
+  { id: 'medicos',     label: 'Médicos',       icon: StethIcon },
+  { id: 'secretarias', label: 'Secretarias',   icon: SecretIcon },
 ];
 
 const AdminSidebar = ({ active, onNavigate }) => {
@@ -89,6 +89,18 @@ function SecretIcon({ active }) {
       <circle cx="9" cy="7" r="4"/>
       <line x1="19" y1="8" x2="19" y2="14"/>
       <line x1="22" y1="11" x2="16" y2="11"/>
+    </svg>
+  );
+}
+
+function AgentIcon({ active }) {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+      stroke={active ? '#f9a8d4' : 'rgba(255,255,255,0.55)'} strokeWidth="2">
+      <circle cx="12" cy="8" r="4"/>
+      <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+      <line x1="12" y1="1" x2="12" y2="3"/>
+      <line x1="12" y1="13" x2="12" y2="14"/>
     </svg>
   );
 }

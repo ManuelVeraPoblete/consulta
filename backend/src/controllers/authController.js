@@ -4,12 +4,20 @@ const { User, MedicoPerfil, Especialidad } = require('../models');
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const IS_PROD  = process.env.NODE_ENV === 'production';
 
+// Derivamos el maxAge del mismo JWT_EXPIRES_IN para que cookie y token sean coherentes
+function parseExpiryMs(s = '2h') {
+  const m = String(s).match(/^(\d+)([smhd])$/);
+  if (!m) return 2 * 3600 * 1000;
+  const units = { s: 1000, m: 60000, h: 3600000, d: 86400000 };
+  return Number(m[1]) * units[m[2]];
+}
+
 const COOKIE_OPTS = {
   httpOnly: true,
   secure:   IS_PROD,
   sameSite: IS_PROD ? 'strict' : 'lax',
   path:     '/',
-  maxAge:   24 * 60 * 60 * 1000,
+  maxAge:   parseExpiryMs(process.env.JWT_EXPIRES_IN),
 };
 
 const setAuthCookie = (res, token) => res.cookie('authToken', token, COOKIE_OPTS);

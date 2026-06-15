@@ -100,12 +100,12 @@
 
 /* Días */
 .dias {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
   gap: 6px;
 }
 
 .diaBtn {
-  flex: 1;
   padding: 8px 4px;
   border: 1.5px solid #e2e8f0;
   border-radius: 8px;
@@ -189,6 +189,80 @@
 }
 .agendarBtn:hover:not(:disabled) { background: #1e429f; }
 .agendarBtn:disabled { background: #e2e8f0; color: #94a3b8; cursor: not-allowed; }
+
+/* Día no disponible */
+.diaNoDisponible {
+  background: #f8fafc !important;
+  color: #cbd5e1 !important;
+  cursor: not-allowed !important;
+  border-color: #f1f5f9 !important;
+}
+
+/* Etiqueta interna del día */
+.diaLabel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+.diaDow {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.8;
+}
+.diaNum {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+}
+.diaMon {
+  font-size: 9px;
+  opacity: 0.8;
+}
+
+/* Loading placeholder */
+.loadingArea {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 56px;
+  color: #94a3b8;
+  font-size: 13px;
+  gap: 8px;
+}
+
+/* Motivo input */
+.motivoInput {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: var(--font-family);
+  outline: none;
+  color: #334155;
+  box-sizing: border-box;
+  transition: border-color 0.18s;
+}
+.motivoInput:focus {
+  border-color: #1a56db;
+  box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.08);
+}
+
+/* Error */
+.errorMsg {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 500;
+}
 
 /* Confirmado */
 .confirmado {

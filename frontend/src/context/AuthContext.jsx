@@ -24,6 +24,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('user', JSON.stringify(refreshed));
       setUser(refreshed);
     }).catch(() => {
+      logoutApi().catch(() => {});
       localStorage.removeItem('user');
       setUser(null);
     });

@@ -1,5 +1,7 @@
 const { Op } = require('sequelize');
-const { AgendaBloqueo } = require('../models');
+const { AgendaBloqueo, Cita } = require('../models');
+
+const HORAS_CONSULTA = ['09:00','09:30','10:00','10:30','11:00','11:30','14:00','14:30','15:00','15:30','16:00','16:30'];
 
 // Reglas base de disponibilidad (sin considerar registros explícitos):
 // - Sábado (6) y domingo (0) siempre bloqueados por defecto.
@@ -168,4 +170,45 @@ const verificarDisponibilidad = async (req, res) => {
   }
 };
 
-module.exports = { getEstadoMes, crearRegistro, eliminarRegistro, esFechaDisponible, verificarDisponibilidad };
+// Slots horarios disponibles para un médico en una fecha concreta
+const getSlots = async (req, res) => {
+  try {
+    const { medicoId, fecha } = req.query;
+    if (!medicoId || !fecha)
+      return res.status(400).json({ message: 'medicoId y fecha son requeridos' });
+
+    const disponible = await esFechaDisponible(Number(medicoId), fecha);
+    if (!disponible) return res.json({ disponible: false, slots: [] });
+
+    const diaInicio = new Date(`${fecha}T00:00:00`);
+    const diaFin    = new Date(`${fecha}T23:59:59`);
+
+    const citas = await Cita.findAll({
+      where: {
+        medico_id: Number(medicoId),
+        fecha_hora: { [Op.between]: [diaInicio, diaFin] },
+        estado: { [Op.ne]: 'cancelada' },
+      },
+      attributes: ['fecha_hora', 'duracion_min'],
+    });
+
+    const ocupados = citas.map((c) => ({
+      inicio: new Date(c.fecha_hora).getTime(),
+      fin:    new Date(c.fecha_hora).getTime() + c.duracion_min * 60000,
+    }));
+
+    const slots = HORAS_CONSULTA.map((hora) => {
+      const slotInicio = new Date(`${fecha}T${hora}:00`).getTime();
+      const slotFin    = slotInicio + 30 * 60000;
+      const libre      = !ocupados.some((o) => o.inicio < slotFin && o.fin > slotInicio);
+      return { hora, libre };
+    });
+
+    res.json({ disponible: true, slots });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ message: 'Error al obtener slots' });
+  }
+};
+
+module.exports = { getEstadoMes, crearRegistro, eliminarRegistro, esFechaDisponible, verificarDisponibilidad, getSlots };

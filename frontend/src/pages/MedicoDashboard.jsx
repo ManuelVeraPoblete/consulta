@@ -9,6 +9,7 @@ import HistorialTab     from '../components/medico/tabs/HistorialTab';
 import RecetasTab       from '../components/medico/tabs/RecetasTab';
 import OrdenesTab       from '../components/medico/tabs/OrdenesTab';
 import ConfiguracionTab from '../components/medico/tabs/ConfiguracionTab';
+import FloatingAgent    from '../components/common/FloatingAgent';
 import styles from './MedicoDashboard.module.css';
 
 const TITLES = {
@@ -23,12 +24,11 @@ const TITLES = {
 };
 
 const MedicoDashboard = () => {
-  const [active, setActive]         = useState('inicio');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [active, setActive] = useState('inicio');
 
   const renderTab = () => {
     switch (active) {
-      case 'inicio':      return <InicioTab />;
+      case 'inicio':      return <InicioTab onNavigate={setActive} />;
       case 'agenda':      return <AgendaTab />;
       case 'adminAgenda': return <AdminAgendaTab />;
       case 'pacientes':   return <PacientesTab />;
@@ -44,11 +44,16 @@ const MedicoDashboard = () => {
     <div className={styles.layout}>
       <MedicoSidebar active={active} onNavigate={setActive} />
       <div className={styles.mainArea}>
-        <MedicoHeader searchQuery={searchQuery} onSearch={setSearchQuery} />
+        <MedicoHeader />
         <div className={styles.content}>
           {renderTab()}
         </div>
       </div>
+      <FloatingAgent
+        endpoint="/agent/medico"
+        title="Asistente Clínico IA"
+        welcomeMessage="¡Hola, doctor/a! Soy tu asistente clínico. Puedo ayudarte a revisar historial del paciente, verificar alergias e interacciones, buscar códigos CIE-10, guardar borradores de consulta y más. ¿Con qué paciente o cita trabajamos hoy?"
+      />
     </div>
   );
 };

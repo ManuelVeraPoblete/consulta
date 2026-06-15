@@ -12,7 +12,7 @@ const ESTADO_STYLE = {
   cancelada:   { bg: '#fef2f2', color: '#b91c1c', border: '#fecaca' },
 };
 
-const InicioTab = () => {
+const InicioTab = ({ onNavigate }) => {
   const [data, setData]   = useState(null);
   const [error, setError] = useState(null);
 
@@ -203,9 +203,18 @@ const InicioTab = () => {
               </svg>
               Receta médica
             </div>
-            <div className={styles.emptyState}>
-              <p>Seleccione un paciente para emitir receta</p>
-            </div>
+            {enAtencion ? (
+              <button
+                className={styles.quickActionBtn}
+                onClick={() => onNavigate?.('recetas')}
+              >
+                Emitir receta — {enAtencion.paciente?.nombre} {enAtencion.paciente?.apellido}
+              </button>
+            ) : (
+              <div className={styles.emptyState}>
+                <p>Seleccione un paciente en agenda para emitir receta</p>
+              </div>
+            )}
           </div>
 
           <div className={styles.card}>
@@ -215,9 +224,18 @@ const InicioTab = () => {
               </svg>
               Órdenes de examen
             </div>
-            <div className={styles.emptyState}>
-              <p>Seleccione un paciente para generar una orden</p>
-            </div>
+            {enAtencion ? (
+              <button
+                className={styles.quickActionBtn}
+                onClick={() => onNavigate?.('ordenes')}
+              >
+                Generar orden — {enAtencion.paciente?.nombre} {enAtencion.paciente?.apellido}
+              </button>
+            ) : (
+              <div className={styles.emptyState}>
+                <p>Seleccione un paciente en agenda para generar una orden</p>
+              </div>
+            )}
           </div>
         </div>
 

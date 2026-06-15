@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const { buscarMedicos, getEspecialidades, getDashboard, getMisCitas, getMisPacientes, getMisRecetas } = require('../controllers/medicoController');
-const { getEstadoMes, crearRegistro, eliminarRegistro, verificarDisponibilidad } = require('../controllers/agendaController');
+const { getEstadoMes, crearRegistro, eliminarRegistro, verificarDisponibilidad, getSlots } = require('../controllers/agendaController');
 const { authenticate, authorize } = require('../middleware/authMiddleware');
 
 const router = Router();
@@ -17,7 +17,9 @@ router.get('/agenda/estado',        authenticate, authorize('medico', 'admin'), 
 router.post('/agenda/registro',     authenticate, authorize('medico', 'admin'), crearRegistro);
 router.delete('/agenda/registro/:id', authenticate, authorize('medico', 'admin'), eliminarRegistro);
 
-// Agenda – consulta de disponibilidad (accesible a secretaria)
+// Agenda – consulta de disponibilidad (accesible a secretaria y paciente)
 router.get('/agenda/disponibilidad', authenticate, verificarDisponibilidad);
+// Slots horarios libres para una fecha (accesible a paciente)
+router.get('/slots', authenticate, getSlots);
 
 module.exports = router;

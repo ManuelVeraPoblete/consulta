@@ -502,3 +502,21 @@
   font-weight: 500;
   color: #15803d;
 }
+
+.quickActionBtn {
+  display: block;
+  width: 100%;
+  padding: 10px 14px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  color: #1d4ed8;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s;
+}
+.quickActionBtn:hover {
+  background: #dbeafe;
+}

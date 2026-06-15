@@ -28,6 +28,10 @@ exports.crearCita = async (req, res) => {
     if (!disponible)
       return res.status(409).json({ message: 'El médico tiene bloqueada esa fecha. Debe liberar el día antes de agendar citas.' });
 
+    const slotLibre = await verificarSlotLibre(medico_id, fecha_hora, duracion_min || 30);
+    if (!slotLibre)
+      return res.status(409).json({ message: 'Ese horario ya está ocupado. Selecciona otro.' });
+
     const cita = await Cita.create({
       paciente_id, medico_id,
       secretaria_id: req.user.id,
@@ -85,6 +89,30 @@ exports.listarCitas = async (req, res) => {
   }
 };
 
+async function verificarSlotLibre(medico_id, fecha_hora, duracion_min = 30, excluir_cita_id = null) {
+  const diaStr   = fecha_hora.split('T')[0];
+  const diaInicio = new Date(`${diaStr}T00:00:00`);
+  const diaFin    = new Date(`${diaStr}T23:59:59`);
+
+  const where = {
+    medico_id,
+    fecha_hora: { [Op.between]: [diaInicio, diaFin] },
+    estado: { [Op.ne]: 'cancelada' },
+  };
+  if (excluir_cita_id) where.id = { [Op.ne]: excluir_cita_id };
+
+  const citasDelDia = await Cita.findAll({ where, attributes: ['fecha_hora', 'duracion_min'] });
+
+  const slotInicio = new Date(fecha_hora).getTime();
+  const slotFin    = slotInicio + duracion_min * 60000;
+
+  return !citasDelDia.some((c) => {
+    const ini = new Date(c.fecha_hora).getTime();
+    const fin = ini + c.duracion_min * 60000;
+    return ini < slotFin && fin > slotInicio;
+  });
+}
+
 exports.reagendarCita = async (req, res) => {
   try {
     const c = await Cita.findByPk(req.params.id);
@@ -98,6 +126,10 @@ exports.reagendarCita = async (req, res) => {
     const disponible = await esFechaDisponible(c.medico_id, fecha_hora);
     if (!disponible)
       return res.status(409).json({ message: 'El médico tiene bloqueada esa fecha. Debe liberar el día antes de reagendar.' });
+
+    const slotLibre = await verificarSlotLibre(c.medico_id, fecha_hora, duracion_min || c.duracion_min, c.id);
+    if (!slotLibre)
+      return res.status(409).json({ message: 'Ese horario ya está ocupado. Selecciona otro.' });
 
     await c.update({ fecha_hora, ...(duracion_min ? { duracion_min } : {}), estado: 'programada' });
     const resultado = await Cita.findByPk(c.id, { include: INCLUDE_FULL });
@@ -118,5 +150,52 @@ exports.cancelarCita = async (req, res) => {
     res.json({ message: 'Cita cancelada' });
   } catch (e) {
     res.status(500).json({ message: 'Error al cancelar cita' });
+  }
+};
+
+// Paciente solicita una cita (vinculación por RUT, secretaria_id = null)
+exports.solicitarCita = async (req, res) => {
+  try {
+    const { medico_id, fecha_hora, motivo } = req.body;
+    if (!medico_id || !fecha_hora)
+      return res.status(400).json({ message: 'medico_id y fecha_hora son requeridos' });
+
+    const userRut = req.user.rut;
+    if (!userRut)
+      return res.status(400).json({ message: 'Tu cuenta no tiene RUT registrado. Contacta a la secretaría.' });
+
+    const paciente = await Paciente.findOne({ where: { rut: userRut } });
+    if (!paciente)
+      return res.status(404).json({ message: 'No se encontró tu ficha de paciente. Contacta a la secretaría.' });
+
+    const medicoExiste = await User.findOne({ where: { id: medico_id, activo: true }, attributes: ['id'] });
+    if (!medicoExiste)
+      return res.status(404).json({ message: 'Médico no encontrado' });
+
+    const diaDisponible = await esFechaDisponible(medico_id, fecha_hora);
+    if (!diaDisponible)
+      return res.status(409).json({ message: 'El médico no tiene disponibilidad en esa fecha.' });
+
+    const slotLibre = await verificarSlotLibre(medico_id, fecha_hora, 30);
+    if (!slotLibre)
+      return res.status(409).json({ message: 'Ese horario ya no está disponible. Por favor elige otro.' });
+
+    const cita = await Cita.create({
+      paciente_id:   paciente.id,
+      medico_id,
+      secretaria_id: null,
+      fecha_hora,
+      duracion_min:  30,
+      motivo:        motivo || null,
+      estado:        'programada',
+    });
+
+    res.status(201).json({
+      message: 'Solicitud de cita registrada. La secretaría confirmará tu hora.',
+      cita_id: cita.id,
+    });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ message: 'Error al solicitar la cita' });
   }
 };

@@ -5,6 +5,7 @@ import InicioTab       from '../components/paciente/tabs/InicioTab';
 import MedicosTab      from '../components/paciente/tabs/MedicosTab';
 import HistorialTab    from '../components/paciente/tabs/HistorialTab';
 import CitasTab        from '../components/paciente/tabs/CitasTab';
+import FloatingAgent   from '../components/common/FloatingAgent';
 import styles from './PacienteDashboard.module.css';
 
 const PacienteDashboard = () => {
@@ -38,6 +39,11 @@ const PacienteDashboard = () => {
           {renderContent()}
         </div>
       </div>
+      <FloatingAgent
+        endpoint="/agent/patient"
+        title="Asistente de Salud"
+        welcomeMessage="¡Hola! Soy tu asistente de salud personal. Puedo ayudarte a ver tus citas, historial médico, recetas y buscar médicos. ¿En qué puedo ayudarte hoy?"
+      />
     </div>
   );
 };

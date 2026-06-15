@@ -96,6 +96,11 @@ const getDashboard = async (req, res) => {
       order: [['fecha_hora', 'DESC']],
     });
 
+    const [recetasEmitidas, ordenesExamen] = await Promise.all([
+      Receta.count({ where: { medico_id: medicoId } }),
+      AtencionMedica.count({ where: { medico_id: medicoId } }),
+    ]);
+
     res.json({
       atencionesHoy,
       proximoPaciente: proximaCita?.paciente
@@ -103,8 +108,8 @@ const getDashboard = async (req, res) => {
         : null,
       proximaCita,
       enAtencion,
-      recetasEmitidas: 0,
-      ordenesExamen: 0,
+      recetasEmitidas,
+      ordenesExamen,
       agendaHoy,
     });
   } catch (e) {

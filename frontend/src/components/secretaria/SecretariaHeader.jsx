@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import styles from './SecretariaHeader.module.css';
 
-const SecretariaHeader = ({ searchQuery, onSearch }) => {
+const SecretariaHeader = () => {
   const { user, logout } = useAuth();
+  const [searchQuery, setSearchQuery] = useState('');
   const nombre = user ? `${user.nombre} ${user.apellido}` : 'Secretaria';
   const iniciales = user ? `${user.nombre?.[0] ?? ''}${user.apellido?.[0] ?? ''}`.toUpperCase() : 'S';
 
@@ -18,7 +19,7 @@ const SecretariaHeader = ({ searchQuery, onSearch }) => {
             className={styles.searchInput}
             placeholder="Buscar pacientes, médicos, citas..."
             value={searchQuery}
-            onChange={e => onSearch(e.target.value)}
+            onChange={e => setSearchQuery(e.target.value)}
           />
         </div>
       </div>

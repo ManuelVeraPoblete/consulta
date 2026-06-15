@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import styles from './MedicoHeader.module.css';
 
-const MedicoHeader = ({ searchQuery, onSearch }) => {
+const MedicoHeader = () => {
   const { user, logout } = useAuth();
   const [notifOpen, setNotifOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const initials = user ? `${user.nombre[0]}${user.apellido[0]}`.toUpperCase() : 'MD';
   const especialidad = user?.perfil?.especialidad?.nombre || 'Medicina General';
 
@@ -18,7 +19,7 @@ const MedicoHeader = ({ searchQuery, onSearch }) => {
           className={styles.searchInput}
           placeholder="Buscar pacientes, RUT o atenciones..."
           value={searchQuery}
-          onChange={e => onSearch(e.target.value)}
+          onChange={e => setSearchQuery(e.target.value)}
         />
       </div>
 

@@ -18,6 +18,7 @@ const secretariaRoutes = require('./routes/secretariaRoutes');
 const citaRoutes = require('./routes/citaRoutes');
 const atencionRoutes = require('./routes/atencionRoutes');
 const medicamentoRoutes = require('./routes/medicamentoRoutes');
+const agentRoutes = require('./routes/agentRoutes');
 
 const app = express();
 
@@ -78,6 +79,7 @@ app.use('/api/secretaria', secretariaRoutes);
 app.use('/api/citas', citaRoutes);
 app.use('/api/atenciones', atencionRoutes);
 app.use('/api/medicamentos', medicamentoRoutes);
+app.use('/api/agent', agentRoutes);
 
 /**
  * Endpoint simple para probar si el backend está vivo.
