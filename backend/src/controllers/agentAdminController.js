@@ -49,6 +49,11 @@ ESTILO DE RESPUESTA:
 - Compara siempre con mes anterior si los datos están disponibles
 - Prioriza alertas: CRÍTICO (afecta operación hoy), ADVERTENCIA (tendencia negativa), INFORMACIÓN (dato de contexto)
 
+PROTOCOLO DE BÚSQUEDA:
+- Cuando el usuario mencione un médico o secretaria por nombre, usa search_staff ANTES de cualquier otra tool que requiera medico_id o usuario_id.
+- Cuando el usuario mencione un paciente por nombre, usa search_patient_admin ANTES de cualquier otra tool que requiera paciente_id.
+- Nunca inventes IDs ni los pidas al usuario. Resuélvelos siempre con search_staff o search_patient_admin.
+
 FORMATO OBLIGATORIO:
 - Texto plano únicamente. Prohibido usar markdown.
 - Sin asteriscos (*), sin almohadillas (#), sin guiones bajos (_), sin comillas invertidas.
@@ -236,6 +241,19 @@ const ADMIN_TOOLS = [
       properties: {
         incluir_proximos_dias: { type: 'integer', default: 7 },
       },
+    },
+  },
+  {
+    name: 'search_staff',
+    description: 'Busca médicos y/o secretarias por nombre o apellido. Devuelve su medico_id/usuario_id. Úsala SIEMPRE antes de cualquier tool que requiera medico_id.',
+    input_schema: {
+      type: 'object',
+      properties: {
+        query: { type: 'string', description: 'Nombre o apellido (mínimo 2 caracteres)' },
+        rol:   { type: 'string', enum: ['medico', 'secretaria'], description: 'Filtrar por rol (opcional)' },
+        limit: { type: 'integer', default: 15 },
+      },
+      required: ['query'],
     },
   },
 ];
@@ -801,6 +819,48 @@ async function executeToolForAdmin(toolName, input) {
           fecha_fin: b.fecha_fin,
         })),
       };
+    }
+
+    // ── Tool: search_staff ───────────────────────────────────────────────────
+    case 'search_staff': {
+      const { query, rol, limit = 15 } = input;
+      if (!query || query.trim().length < 2)
+        return { error: 'Se requieren al menos 2 caracteres para buscar' };
+      const q = query.trim();
+      const where = {
+        [Op.or]: [
+          { nombre: { [Op.like]: `%${q}%` } },
+          { apellido: { [Op.like]: `%${q}%` } },
+        ],
+        activo: true,
+      };
+      if (rol && ['medico', 'secretaria'].includes(rol)) {
+        where.rol = rol;
+      } else {
+        where.rol = { [Op.in]: ['medico', 'secretaria'] };
+      }
+      const usuarios = await User.findAll({
+        where,
+        attributes: ['id', 'nombre', 'apellido', 'email', 'rol', 'rut'],
+        include: [{
+          model: MedicoPerfil,
+          as: 'perfil',
+          required: false,
+          include: [{ model: Especialidad, as: 'especialidad', attributes: ['nombre'] }],
+        }],
+        order: [['apellido', 'ASC'], ['nombre', 'ASC']],
+        limit: Math.min(limit, 30),
+      });
+      const resultado = usuarios.map(u => ({
+        id: u.id,
+        nombre: u.nombre,
+        apellido: u.apellido,
+        email: u.email,
+        rol: u.rol,
+        rut: u.rut,
+        especialidad: u.perfil?.especialidad?.nombre || null,
+      }));
+      return { personal: resultado, total: resultado.length };
     }
 
     default:

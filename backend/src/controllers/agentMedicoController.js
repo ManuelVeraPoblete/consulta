@@ -85,6 +85,10 @@ PRIVACIDAD (Ley 20.584 art. 12):
 - Toda información clínica es confidencial.
 - La responsabilidad clínica del diagnóstico y prescripción recae únicamente en el médico titulado.
 
+PROTOCOLO DE BÚSQUEDA:
+- Cuando el usuario mencione un paciente por nombre, apellido o RUT, usa search_patient ANTES de cualquier tool que requiera paciente_id.
+- Nunca inventes IDs ni los pidas al usuario. Resuélvelos siempre con search_patient.
+
 FORMATO OBLIGATORIO:
 - Texto plano únicamente. Prohibido usar markdown.
 - Sin asteriscos (*), sin almohadillas (#), sin guiones bajos (_), sin comillas invertidas.
@@ -98,6 +102,17 @@ FORMATO OBLIGATORIO:
 // Definiciones de las 12 herramientas
 // ---------------------------------------------------------------------------
 const MEDICO_TOOLS = [
+  {
+    name: 'search_patient',
+    description: 'Busca pacientes por nombre, apellido o RUT. Úsala SIEMPRE antes de cualquier tool que requiera paciente_id. Solo devuelve pacientes que han tenido cita con este médico.',
+    input_schema: {
+      type: 'object',
+      properties: {
+        query: { type: 'string', description: 'Nombre, apellido o RUT (mínimo 2 caracteres)' },
+      },
+      required: ['query'],
+    },
+  },
   {
     name: 'get_patient_data',
     description: 'Datos clínicos del paciente: antecedentes, alergias, grupo sanguíneo, previsión, contacto de emergencia.',
@@ -260,6 +275,39 @@ const MEDICO_TOOLS = [
 // ---------------------------------------------------------------------------
 async function executeToolForMedico(toolName, input, medicoId) {
   switch (toolName) {
+    // -----------------------------------------------------------------------
+    case 'search_patient': {
+      const { query } = input;
+      if (!query || query.trim().length < 2)
+        return { error: 'Se requieren al menos 2 caracteres para buscar' };
+
+      const citasDelMedico = await Cita.findAll({
+        where: { medico_id: medicoId },
+        attributes: ['paciente_id'],
+        group: ['paciente_id'],
+        raw: true,
+      });
+      const pacienteIds = citasDelMedico.map((c) => c.paciente_id);
+      if (!pacienteIds.length)
+        return { pacientes: [], total: 0, mensaje: 'Este médico no tiene pacientes registrados aún.' };
+
+      const q = query.trim();
+      const pacientes = await Paciente.findAll({
+        where: {
+          id: { [Op.in]: pacienteIds },
+          [Op.or]: [
+            { nombre:   { [Op.like]: `%${q}%` } },
+            { apellido: { [Op.like]: `%${q}%` } },
+            { rut:      { [Op.like]: `%${q}%` } },
+          ],
+        },
+        attributes: ['id', 'nombre', 'apellido', 'rut', 'fecha_nacimiento', 'prevision_salud', 'alergias'],
+        order: [['apellido', 'ASC'], ['nombre', 'ASC']],
+        limit: 10,
+      });
+      return { pacientes, total: pacientes.length };
+    }
+
     // -----------------------------------------------------------------------
     case 'get_patient_data': {
       const { paciente_id } = input;

@@ -63,8 +63,9 @@ ${medicosList || '(sin médicos asignados)'}
 
 RESTRICCIONES DE ACCESO:
 - Solo puedes consultar, crear, modificar o cancelar citas de los médicos listados.
-- Nunca inventes paciente_id, medico_id ni cita_id. Verifica con search_patient primero.
+- Nunca inventes paciente_id, medico_id ni cita_id. Verifica con search_patient o search_doctor primero.
 - Si el medico_id solicitado no está en tu lista, rechaza la operación.
+- Cuando el usuario mencione un médico por nombre, usa search_doctor ANTES de usar get_doctor_availability u otra tool con medico_id.
 
 PROTOCOLO DE CONFIRMACIÓN PARA ACCIONES DESTRUCTIVAS:
 - Antes de cancel_appointment: siempre presenta resumen y pide confirmación explícita.
@@ -353,6 +354,21 @@ const SECRETARY_TOOLS = [
         limit: { type: 'integer', default: 20 },
       },
       required: ['paciente_id'],
+    },
+  },
+  {
+    name: 'search_doctor',
+    description:
+      'Busca médicos asignados a esta secretaria por nombre o apellido. Úsala SIEMPRE antes de cualquier tool que requiera medico_id.',
+    input_schema: {
+      type: 'object',
+      properties: {
+        query: {
+          type: 'string',
+          description: 'Nombre o apellido del médico (mínimo 2 caracteres)',
+        },
+      },
+      required: ['query'],
     },
   },
 ];
@@ -847,6 +863,39 @@ async function executeToolForSecretary(toolName, input, secretariaId, medicoIds)
       }
 
       return { total: citas.length, resumen, citas };
+    }
+
+    case 'search_doctor': {
+      const { query } = input;
+      if (!query || query.trim().length < 2)
+        return { error: 'Se requieren al menos 2 caracteres para buscar' };
+      if (!medicoIds.length)
+        return { medicos: [], total: 0, mensaje: 'No tienes médicos asignados.' };
+      const q = query.trim();
+      const medicos = await User.findAll({
+        where: {
+          id: { [Op.in]: medicoIds },
+          [Op.or]: [
+            { nombre: { [Op.like]: `%${q}%` } },
+            { apellido: { [Op.like]: `%${q}%` } },
+          ],
+        },
+        attributes: ['id', 'nombre', 'apellido'],
+        include: [{
+          model: MedicoPerfil,
+          as: 'perfil',
+          required: false,
+          include: [{ model: Especialidad, as: 'especialidad', attributes: ['nombre'] }],
+        }],
+        order: [['apellido', 'ASC'], ['nombre', 'ASC']],
+      });
+      const resultado = medicos.map(m => ({
+        medico_id: m.id,
+        nombre: m.nombre,
+        apellido: m.apellido,
+        especialidad: m.perfil?.especialidad?.nombre || null,
+      }));
+      return { medicos: resultado, total: resultado.length };
     }
 
     default:
