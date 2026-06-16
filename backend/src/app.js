@@ -20,6 +20,7 @@ const atencionRoutes = require('./routes/atencionRoutes');
 const medicamentoRoutes = require('./routes/medicamentoRoutes');
 const agentRoutes = require('./routes/agentRoutes');
 const ordenRoutes = require('./routes/ordenRoutes');
+const notificacionRoutes = require('./routes/notificacionRoutes');
 
 const app = express();
 
@@ -82,6 +83,7 @@ app.use('/api/atenciones', atencionRoutes);
 app.use('/api/medicamentos', medicamentoRoutes);
 app.use('/api/agent', agentRoutes);
 app.use('/api/ordenes', ordenRoutes);
+app.use('/api/notificaciones', notificacionRoutes);
 
 /**
  * Endpoint simple para probar si el backend está vivo.

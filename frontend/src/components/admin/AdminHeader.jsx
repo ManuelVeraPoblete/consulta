@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAuth } from '../../context/AuthContext';
+import NotifBell from '../common/NotifBell';
 import styles from './AdminHeader.module.css';
 
 const AdminHeader = ({ title }) => {
@@ -19,6 +20,8 @@ const AdminHeader = ({ title }) => {
           </svg>
           <span>{new Date().toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long' })}</span>
         </div>
+
+        <NotifBell canSend={true} />
 
         <div className={styles.userInfo}>
           <div className={styles.avatar}>

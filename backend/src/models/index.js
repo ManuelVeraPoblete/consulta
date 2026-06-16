@@ -19,6 +19,7 @@ const { Medicamento } = require('./Medicamento');
 const { AgendaBloqueo } = require('./AgendaBloqueo');
 const { OrdenExamen } = require('./OrdenExamen');
 const { OrdenExamenItem } = require('./OrdenExamenItem');
+const { Notificacion } = require('./Notificacion');
 
 /**
  * Usuario ↔ Perfil médico
@@ -228,6 +229,14 @@ User.hasMany(OrdenExamen,     { foreignKey: 'medico_id',   as: 'ordenesEmitidas'
 Cita.hasOne(OrdenExamen,      { foreignKey: 'cita_id',     as: 'ordenExamen' });
 
 /**
+ * Notificacion ↔ Emisor / Receptor
+ */
+Notificacion.belongsTo(User, { foreignKey: 'emisor_id',   as: 'emisor'   });
+Notificacion.belongsTo(User, { foreignKey: 'receptor_id', as: 'receptor' });
+User.hasMany(Notificacion,   { foreignKey: 'emisor_id',   as: 'notificacionesEnviadas' });
+User.hasMany(Notificacion,   { foreignKey: 'receptor_id', as: 'notificacionesRecibidas' });
+
+/**
  * Verifica la conexión a la base de datos.
  *
  * IMPORTANTE:
@@ -263,6 +272,7 @@ module.exports = {
   AgendaBloqueo,
   OrdenExamen,
   OrdenExamenItem,
+  Notificacion,
 
   syncDatabase,
 };
