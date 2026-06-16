@@ -6,14 +6,14 @@
 
 .statsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  grid-template-columns: repeat(6, 1fr);
   gap: 14px;
 }
 
 .statCard {
   border: 1px solid;
   border-radius: 14px;
-  padding: 20px 18px;
+  padding: 16px 14px;
 }
 
 .statVal { font-size: 28px; font-weight: 800; line-height: 1; margin-bottom: 6px; }
