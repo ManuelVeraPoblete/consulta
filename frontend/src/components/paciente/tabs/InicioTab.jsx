@@ -54,12 +54,13 @@ const InicioTab = ({ onIrMedicos, onIrHistorial }) => {
 
       {/* Notificaciones */}
       {noLeidas !== null && (
-        <div style={{
-          display: 'flex', alignItems: 'center', gap: 14,
-          background: noLeidas > 0 ? '#fffbeb' : '#f8fafc',
-          border: `1.5px solid ${noLeidas > 0 ? '#fde68a' : '#e2e8f0'}`,
-          borderRadius: 14, padding: '14px 20px', marginBottom: 4,
-        }}>
+        <div
+          className={styles.notifCard}
+          style={{
+            background: noLeidas > 0 ? '#fffbeb' : '#f8fafc',
+            border: `1.5px solid ${noLeidas > 0 ? '#fde68a' : '#e2e8f0'}`,
+          }}
+        >
           <div style={{
             width: 42, height: 42, borderRadius: 10, flexShrink: 0,
             background: noLeidas > 0 ? '#fef3c7' : '#f1f5f9',
