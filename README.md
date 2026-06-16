@@ -1,257 +1,302 @@
-# Consulta Médica - Sistema de Gestión de Salud
+# Consulta Médica — Sistema de Gestión de Salud
 
-Sistema web completo para la gestión de consultas médicas con tres roles de usuario: Médico, Secretaria y Paciente. Desarrollado con React (frontend), Node.js + Express (backend), Sequelize ORM y MySQL.
+Sistema web completo para la gestión de consultas médicas con cuatro roles de usuario: **Admin**, **Médico**, **Secretaria** y **Paciente**. Incluye IA agéntica por rol impulsada por la API de Claude (Anthropic).
 
----
-
-## Descripción del Sistema
-
-**Consulta Médica** es una plataforma de salud digital que permite gestionar citas, historial médico y usuarios de una clínica u consultorio médico. El sistema implementa autenticación JWT con roles diferenciados, donde cada tipo de usuario accede a un dashboard personalizado con las funcionalidades relevantes para su rol.
-
-### Funcionalidades principales
-
-| Rol         | Acceso                                                                 |
-|-------------|------------------------------------------------------------------------|
-| Médico      | Ver agenda diaria, estadísticas de pacientes, historial de consultas   |
-| Secretaria  | Gestionar y filtrar citas, ver estadísticas del consultorio            |
-| Paciente    | Ver sus próximas citas y su historial médico personal                  |
+Desarrollado con React + Vite (frontend), Node.js + Express + Sequelize (backend) y TiDB Cloud (MySQL-compatible) como base de datos.
 
 ---
 
-## Stack Tecnológico
+## Roles y funcionalidades
+
+| Rol        | Funcionalidades principales |
+|------------|-----------------------------|
+| **Admin**      | Gestión de usuarios, médicos, secretarias, pacientes, especialidades y bloqueos de agenda. Estadísticas operativas. Asistente IA con 14 herramientas de analytics. |
+| **Médico**     | Agenda diaria, ficha de pacientes, atenciones médicas, recetas, órdenes de examen, borrador de consulta. Asistente clínico IA con 12 herramientas (alertas de alergias, interacciones, casos similares). |
+| **Secretaria** | Gestión de citas (crear, reagendar, cancelar, confirmar masivo), búsqueda de pacientes, verificación de disponibilidad horaria. Asistente IA con 12 herramientas y confirmación de acciones destructivas. |
+| **Paciente**   | Ver citas, historial médico, recetas, perfil clínico. Buscar médicos y verificar disponibilidad. Solicitar citas. Asistente IA con 10 herramientas y protocolo de emergencia (SAMU 131). |
+
+---
+
+## Stack tecnológico
 
 ### Frontend
 - **React 18** con componentes funcionales y hooks
-- **React Router v6** para enrutamiento declarativo con protección de rutas
-- **Vite** como bundler/dev server ultrarrápido
-- **CSS Modules** para estilos encapsulados y sin colisiones
-- **Axios** para llamadas HTTP con interceptores de autenticación
-- **Context API** para gestión de estado global de autenticación
+- **React Router v6** con protección de rutas por rol
+- **Vite** como bundler/dev server
+- **CSS Modules** para estilos encapsulados
+- **Axios** con interceptores JWT automáticos
+- **Context API** para estado global de autenticación
 
 ### Backend
-- **Node.js** con **Express** como framework HTTP
-- **Sequelize ORM** para abstracción de base de datos
-- **MySQL 8** como motor de base de datos relacional
-- **JWT** (jsonwebtoken) para autenticación stateless
-- **bcryptjs** para hash seguro de contraseñas
-- **dotenv** para manejo de variables de entorno
+- **Node.js + Express**
+- **Sequelize ORM** con TiDB Cloud (MySQL-compatible)
+- **JWT** (jsonwebtoken) — autenticación stateless
+- **bcryptjs** — hash de contraseñas
+- **@anthropic-ai/sdk** — IA agéntica con `tool_use` loop
+- **dotenv** — variables de entorno
+
+### Base de datos
+- **TiDB Cloud** (MySQL 8-compatible) en producción
+- MySQL 8 local para desarrollo
 
 ---
 
-## Estructura del Proyecto
+## IA Agéntica
+
+Cada rol tiene un asistente de IA basado en el **loop agéntico de Claude** (`claude-sonnet-4-6`):
+
+```
+POST /api/agent/admin      → Asistente del administrador (14 tools)
+POST /api/agent/secretary  → Asistente de secretaría (12 tools)
+POST /api/agent/medico     → Asistente clínico del médico (12 tools)
+POST /api/agent/patient    → Asistente de salud del paciente (10 tools)
+```
+
+### Patrón loop agéntico
+```javascript
+while (rounds < MAX_ROUNDS) {
+  const response = await client.messages.create({
+    model: 'claude-sonnet-4-6',
+    tools: roleTools,
+    messages: currentMessages,
+  });
+  if (response.stop_reason === 'end_turn') break;
+  // ejecutar tools → agregar tool_result → repetir
+}
+```
+
+### Seguridad de los agentes
+- **ToolGuard**: `paciente_id`, `medico_id`, etc., **siempre** provienen del JWT, nunca del input del usuario.
+- **IDOR prevention**: queries con `WHERE id = X AND paciente_id = {jwtId}`.
+- **Secretaria**: `guardMedico()` verifica que el médico esté asignado a esa secretaria antes de operar.
+- **Ley 20.584**: el agente admin no expone datos clínicos individuales.
+- **Rate limiting paciente**: 20 req/usuario/hora (in-memory).
+- **Protocolo de emergencia**: el agente paciente antepone "Llama al 131 (SAMU)" ante síntomas graves.
+
+### Variable de entorno requerida
+```env
+ANTHROPIC_API_KEY=sk-ant-...
+```
+
+---
+
+## Estructura del proyecto
 
 ```
 consulta/
 ├── backend/
-│   ├── src/
-│   │   ├── config/
-│   │   │   └── database.js          # Conexión Sequelize/MySQL
-│   │   ├── controllers/
-│   │   │   └── authController.js    # Lógica de endpoints de autenticación
-│   │   ├── middleware/
-│   │   │   └── authMiddleware.js    # Verificación JWT y autorización por rol
-│   │   ├── models/
-│   │   │   ├── index.js             # Exportación de modelos y sync
-│   │   │   └── User.js              # Modelo de usuario con hooks bcrypt
-│   │   ├── routes/
-│   │   │   └── authRoutes.js        # Definición de rutas de la API
-│   │   ├── seeders/
-│   │   │   └── seed.js              # Datos de prueba para los 3 roles
-│   │   ├── services/
-│   │   │   └── authService.js       # Lógica de negocio de autenticación
-│   │   └── app.js                   # Entry point: Express + middlewares + inicio
-│   ├── .env                         # Variables de entorno (no versionar)
-│   └── package.json
+│   └── src/
+│       ├── config/
+│       │   └── database.js                  # Conexión Sequelize/TiDB
+│       ├── controllers/
+│       │   ├── authController.js            # Login / register / profile
+│       │   ├── adminController.js           # CRUD usuarios, médicos, pacientes
+│       │   ├── agendaController.js          # Bloqueos, disponibilidad, slots
+│       │   ├── citaController.js            # CRUD citas + solicitud de paciente
+│       │   ├── medicoController.js          # Búsqueda médicos, dashboard, citas
+│       │   ├── atencionController.js        # Atenciones médicas
+│       │   ├── recetaController.js          # Recetas y sus ítems
+│       │   ├── agentAdminController.js      # Agente IA admin (14 tools)
+│       │   ├── agentSecretariaController.js # Agente IA secretaria (12 tools)
+│       │   ├── agentMedicoController.js     # Agente IA médico (12 tools)
+│       │   └── agentPacienteController.js   # Agente IA paciente (10 tools)
+│       ├── middleware/
+│       │   └── authMiddleware.js            # authenticate + authorize por rol
+│       ├── models/
+│       │   ├── index.js                     # Exportación y asociaciones
+│       │   ├── User.js                      # Tabla usuarios (4 roles)
+│       │   ├── MedicoPerfil.js              # Perfil médico, registro, convenios
+│       │   ├── Especialidad.js
+│       │   ├── Subespecialidad.js
+│       │   ├── Paciente.js                  # Ficha de paciente (vinculada por RUT)
+│       │   ├── Cita.js                      # programada/confirmada/cancelada/completada
+│       │   ├── AtencionMedica.js            # Signos vitales, diagnóstico, CIE-10
+│       │   ├── Receta.js
+│       │   ├── RecetaItem.js
+│       │   ├── Medicamento.js
+│       │   ├── SecretariaMedico.js          # Tabla de asignación secretaria↔médico
+│       │   └── AgendaBloqueo.js             # Bloqueos y liberaciones de agenda
+│       ├── routes/
+│       │   ├── authRoutes.js
+│       │   ├── adminRoutes.js
+│       │   ├── medicoRoutes.js              # incluye GET /slots
+│       │   ├── citaRoutes.js                # incluye POST /solicitud (paciente)
+│       │   ├── atencionRoutes.js
+│       │   ├── recetaRoutes.js
+│       │   ├── pacienteRoutes.js
+│       │   └── agentRoutes.js               # 4 endpoints agénticos
+│       └── app.js
 │
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── common/
-│   │   │   │   ├── Alert.jsx        # Componente de alertas reutilizable
-│   │   │   │   ├── Button.jsx       # Botón con variantes, tamaños y spinner
-│   │   │   │   └── Input.jsx        # Input con ícono, label y toggle password
-│   │   │   ├── dashboard/
-│   │   │   │   ├── DashboardLayout.jsx  # Layout común: header + nav + main
-│   │   │   │   └── StatCard.jsx         # Tarjeta de estadística reutilizable
-│   │   │   └── login/
-│   │   │       ├── LoginForm.jsx    # Formulario de inicio de sesión
-│   │   │       ├── LoginLeft.jsx    # Panel izquierdo animado con features
-│   │   │       └── RegisterForm.jsx # Formulario de registro con selección de rol
-│   │   ├── context/
-│   │   │   └── AuthContext.jsx      # Contexto global: login, register, logout
-│   │   ├── pages/
-│   │   │   ├── Login.jsx            # Página de login (dos columnas)
-│   │   │   ├── MedicoDashboard.jsx  # Dashboard del médico
-│   │   │   ├── SecretariaDashboard.jsx # Dashboard de la secretaria
-│   │   │   └── PacienteDashboard.jsx   # Dashboard del paciente
-│   │   ├── routes/
-│   │   │   └── PrivateRoute.jsx     # HOC para proteger rutas por rol
-│   │   ├── services/
-│   │   │   └── authService.js       # Cliente Axios con interceptores JWT
-│   │   ├── App.jsx                  # Árbol de rutas principal
-│   │   ├── index.css                # Variables CSS globales y reset
-│   │   └── main.jsx                 # Entry point React
-│   ├── index.html
-│   ├── package.json
-│   └── vite.config.js
-│
-└── README.md
+└── frontend/
+    └── src/
+        ├── components/
+        │   ├── admin/
+        │   │   ├── AdminSidebar.jsx
+        │   │   └── tabs/
+        │   │       ├── AgentChatPanel.jsx   # Chat IA reutilizable (todos los roles)
+        │   │       ├── AgentChatPanel.module.css
+        │   │       └── ...tabs del admin
+        │   ├── medico/
+        │   │   ├── MedicoSidebar.jsx
+        │   │   └── tabs/...
+        │   ├── secretaria/
+        │   │   ├── SecretariaSidebar.jsx
+        │   │   └── tabs/...
+        │   └── paciente/
+        │       ├── PacienteSidebar.jsx
+        │       ├── MedicoAgenda.jsx         # Disponibilidad real + solicitud de cita
+        │       └── tabs/...
+        ├── pages/
+        │   ├── AdminDashboard.jsx
+        │   ├── MedicoDashboard.jsx
+        │   ├── SecretariaDashboard.jsx
+        │   └── PacienteDashboard.jsx
+        ├── context/
+        │   └── AuthContext.jsx
+        ├── services/
+        │   └── authService.js              # Axios con interceptores JWT
+        └── App.jsx
 ```
 
 ---
 
-## Principios SOLID Aplicados
+## API REST — Endpoints principales
 
-### S — Principio de Responsabilidad Única
-Cada módulo tiene una única razón para cambiar:
-- `authService.js` (backend): solo gestiona lógica de autenticación
-- `authMiddleware.js`: solo valida tokens y permisos
-- `AuthContext.jsx`: solo maneja el estado global de sesión
-- `StatCard.jsx`: solo renderiza una tarjeta de estadística
+### Autenticación
+| Método | Ruta | Descripción | Auth |
+|--------|------|-------------|------|
+| POST | `/api/auth/login` | Iniciar sesión | No |
+| POST | `/api/auth/register` | Registrar usuario | No |
+| GET | `/api/auth/profile` | Perfil del usuario actual | JWT |
 
-### O — Principio Abierto/Cerrado
-- El componente `Button` es extensible mediante props (`variant`, `size`, `icon`) sin modificar su código
-- `DashboardLayout` acepta `children` y es reutilizable para todos los roles
+### Médicos y agenda
+| Método | Ruta | Descripción | Roles |
+|--------|------|-------------|-------|
+| GET | `/api/medicos/buscar` | Buscar médicos (filtros) | Todos |
+| GET | `/api/medicos/especialidades` | Listar especialidades | Todos |
+| GET | `/api/medicos/agenda/disponibilidad` | Disponibilidad de día | Todos |
+| GET | `/api/medicos/slots` | Slots horarios libres por fecha | Todos |
+| GET | `/api/medicos/agenda/estado` | Estado mensual de la agenda | médico/admin |
+| POST | `/api/medicos/agenda/registro` | Crear bloqueo/liberación | médico/admin |
 
-### L — Principio de Sustitución de Liskov
-- Todos los dashboards son intercambiables bajo `DashboardLayout`; cumplen el mismo contrato de componente hijo
+### Citas
+| Método | Ruta | Descripción | Roles |
+|--------|------|-------------|-------|
+| GET | `/api/citas` | Listar citas | admin/secretaria |
+| POST | `/api/citas` | Crear cita | admin/secretaria |
+| PATCH | `/api/citas/:id/reagendar` | Reagendar cita | admin/secretaria |
+| PATCH | `/api/citas/:id/cancelar` | Cancelar cita | admin/secretaria |
+| POST | `/api/citas/solicitud` | Solicitar cita (vinculación por RUT) | paciente |
 
-### I — Principio de Segregación de Interfaces
-- La API expone endpoints específicos por función (`/login`, `/register`, `/profile`)
-- Los middlewares `authenticate` y `authorize` son independientes y componibles
-
-### D — Principio de Inversión de Dependencias
-- Los controladores dependen de `authService` (abstracción), no de la implementación de bcrypt/JWT directamente
-- Los componentes React dependen del contexto (`useAuth`) en lugar de llamar a Axios directamente
+### Agentes IA
+| Método | Ruta | Tools | Roles |
+|--------|------|-------|-------|
+| POST | `/api/agent/admin` | 14 | admin |
+| POST | `/api/agent/secretary` | 12 | secretaria |
+| POST | `/api/agent/medico` | 12 | medico |
+| POST | `/api/agent/patient` | 10 | paciente |
 
 ---
 
-## Instalación y Configuración
+## Seguridad implementada
 
-### Requisitos previos
+- **SQL Injection**: parámetros siempre via Sequelize ORM (consultas parametrizadas)
+- **XSS**: `helmet` con CSP en todos los endpoints
+- **IDOR**: IDs sensibles siempre desde `req.user.id` (JWT), nunca del body/query
+- **Autenticación**: JWT con firma HS256, expiración configurable
+- **Contraseñas**: bcrypt con salt rounds 10, hooks Sequelize (nunca en texto plano)
+- **CORS**: origen restringido al frontend desplegado
+- **Rate limiting**: agente paciente limitado a 20 req/usuario/hora
+- **Error leakage**: errores internos no exponen stack traces al cliente
+
+---
+
+## Vinculación Paciente ↔ Usuario
+
+La tabla `pacientes` no tiene FK directa a `usuarios`. La vinculación se hace por RUT:
+
+```javascript
+// En agentPacienteController y citaController (POST /solicitud)
+const paciente = await Paciente.findOne({ where: { rut: req.user.rut } });
+```
+
+El campo `rut` existe en ambas tablas (`usuarios.rut` y `pacientes.rut`).
+
+---
+
+## Instalación local
+
+### Requisitos
 - Node.js >= 18
-- MySQL 8 ejecutándose localmente
-- npm o yarn
+- MySQL 5.7+ corriendo en `127.0.0.1:3306`
+- Base de datos `consulta_medica` creada con todas las tablas
+- Cuenta Anthropic con API key (para funciones IA)
 
-### 1. Configurar la base de datos
-
+### 1. Crear la base de datos (si no existe)
 ```sql
-CREATE DATABASE IF NOT EXISTS consulta_medica CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS consulta_medica
+  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
-> Las credenciales configuradas son: usuario `manuel`, contraseña `q1w2e3`
-
-### 2. Instalar y arrancar el backend
-
+### 2. Backend
 ```bash
 cd backend
 npm install
-npm run dev        # Desarrollo con nodemon
-# O: npm start    # Producción
+npm run dev
 ```
 
-El servidor se inicia en `http://localhost:5000` y sincroniza las tablas automáticamente con Sequelize.
-
-### 3. Cargar datos de prueba
-
-```bash
-cd backend
-npm run seed
-```
-
-Esto crea tres usuarios de prueba:
-
-| Email                        | Contraseña     | Rol         |
-|------------------------------|----------------|-------------|
-| medico@consulta.com          | medico123      | Médico      |
-| secretaria@consulta.com      | secretaria123  | Secretaria  |
-| paciente@consulta.com        | paciente123    | Paciente    |
-
-### 4. Instalar y arrancar el frontend
-
+### 3. Frontend
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-La aplicación estará disponible en `http://localhost:5173`
+La app estará en `http://localhost:5173` y el backend en `http://localhost:5000`.
 
 ---
 
-## API REST
+## Variables de entorno
 
-### Endpoints disponibles
-
-| Método | Ruta               | Descripción                          | Auth requerida |
-|--------|--------------------|--------------------------------------|----------------|
-| POST   | /api/auth/login    | Iniciar sesión                       | No             |
-| POST   | /api/auth/register | Registrar nuevo usuario              | No             |
-| GET    | /api/auth/profile  | Obtener perfil del usuario actual    | Sí (Bearer)    |
-| GET    | /api/health        | Verificar estado del servidor        | No             |
-
-### Ejemplo de login
-
-```bash
-curl -X POST http://localhost:5000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"medico@consulta.com","password":"medico123"}'
-```
-
-**Respuesta:**
-```json
-{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5...",
-  "user": {
-    "id": 1,
-    "nombre": "Carlos",
-    "apellido": "Rodríguez",
-    "email": "medico@consulta.com",
-    "rol": "medico",
-    "activo": true
-  },
-  "message": "Login exitoso"
-}
-```
-
----
-
-## Seguridad
-
-- **Contraseñas**: Hasheadas con bcrypt (salt rounds: 10) mediante hooks de Sequelize
-- **Autenticación**: JWT con expiración configurable (por defecto 24h)
-- **Autorización**: Middleware de roles que verifica el campo `rol` del token
-- **CORS**: Configurado para aceptar solo el origen del frontend
-- **Datos sensibles**: El campo `password` es eliminado del JSON de respuesta con `toJSON()`
-- **Variables de entorno**: Credenciales y secretos en `.env` (nunca en el código)
-
----
-
-## Diseño de la Interfaz
-
-El login replica el diseño de la imagen de referencia:
-- **Panel izquierdo**: Gradiente azul con imagen de fondo, tagline "Tu salud, nuestra prioridad", lista de características y badge de seguridad
-- **Panel derecho**: Tarjeta blanca con logo, campos de email/contraseña con íconos, checkbox "Recordarme", botón de inicio de sesión y opción de crear cuenta
-
-Cada dashboard tiene:
-- Header con logo, nombre y rol del usuario, botón de cierre de sesión
-- Grid de tarjetas de estadísticas con color único por rol
-- Tablas y listados de información relevante al rol
-
----
-
-## Variables de Entorno (backend/.env)
-
+### `backend/.env`
 ```env
-PORT=5000
-DB_HOST=localhost
+# Base de datos MySQL local
+DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_NAME=consulta_medica
 DB_USER=manuel
 DB_PASSWORD=q1w2e3
-JWT_SECRET=consulta_medica_secret_2024
-JWT_EXPIRES_IN=24h
+DB_SSL=false
+
+# JWT
+JWT_SECRET=<secreto_largo_aleatorio>
+JWT_EXPIRES_IN=2h
+
+# IA agéntica (Anthropic) — requerida para los agentes
+# ANTHROPIC_API_KEY=sk-ant-...
+
 NODE_ENV=development
+```
+
+### `frontend/.env`
+```env
+VITE_API_URL=http://localhost:5000/api
+```
+
+---
+
+## Modelos de datos principales
+
+```
+usuarios          → id, nombre, apellido, rut, email, password, rol, activo
+pacientes         → id, nombre, apellido, rut, fecha_nacimiento, prevision_salud, alergias, antecedentes, ...
+medicos_perfil    → id, usuario_id (FK), especialidad_id, acepta_fonasa, acepta_isapre, valor_particular, ...
+citas             → id, paciente_id, medico_id, secretaria_id (nullable), fecha_hora, estado, motivo
+atenciones_medicas→ id, cita_id, paciente_id, medico_id, diagnostico, cie10, plan_tratamiento, signos_vitales
+recetas           → id, atencion_id, paciente_id, medico_id, observaciones
+receta_items      → id, receta_id, medicamento (texto), dosis, frecuencia, duracion
+agenda_bloqueos   → id, medico_id, fecha_inicio, fecha_fin, tipo (bloqueo|liberacion)
+secretaria_medico → secretaria_id, medico_id  (tabla de asignación)
 ```
 
 ---
@@ -260,14 +305,13 @@ NODE_ENV=development
 
 ### Backend
 ```bash
-npm run dev    # Desarrollo con hot-reload (nodemon)
+npm run dev    # Desarrollo con nodemon
 npm start      # Producción
-npm run seed   # Poblar base de datos con usuarios de prueba
 ```
 
 ### Frontend
 ```bash
-npm run dev      # Servidor de desarrollo Vite (http://localhost:5173)
+npm run dev      # Servidor de desarrollo Vite
 npm run build    # Build de producción
-npm run preview  # Previsualizar build de producción
+npm run preview  # Previsualizar build
 ```
