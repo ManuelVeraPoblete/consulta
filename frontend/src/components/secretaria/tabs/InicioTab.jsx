@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getDashboardStats, getAtencionByCita } from '../../../services/secretariaService';
+import { contarNoLeidas } from '../../../services/notificacionService';
 import styles from './InicioTab.module.css';
 
 const fmt = (fechaHora) => {
@@ -113,21 +114,24 @@ const AtencionModal = ({ citaId, onClose }) => {
 };
 
 const InicioTab = () => {
-  const [stats, setStats]             = useState(null);
-  const [error, setError]             = useState(null);
+  const [stats,    setStats]      = useState(null);
+  const [error,    setError]      = useState(null);
   const [verAtencion, setVerAtencion] = useState(null);
+  const [noLeidas, setNoLeidas]   = useState('…');
 
   useEffect(() => {
     getDashboardStats()
       .then(setStats)
       .catch(() => setError('No se pudieron cargar las estadísticas'));
+    contarNoLeidas().then(setNoLeidas).catch(() => setNoLeidas(0));
   }, []);
 
   const cards = [
-    { label: 'Citas hoy',             value: stats?.citasHoy             ?? '…', color: '#1a56db', bg: '#eff6ff', border: '#bfdbfe' },
-    { label: 'Pacientes nuevos',       value: stats?.pacientesNuevos      ?? '…', color: '#0891b2', bg: '#ecfeff', border: '#a5f3fc' },
-    { label: 'Atenciones completadas', value: stats?.atencionesCompletadas ?? '…', color: '#15803d', bg: '#f0fdf4', border: '#bbf7d0' },
-    { label: 'Médicos activos',        value: stats?.medicosActivos        ?? '…', color: '#7c3aed', bg: '#f5f3ff', border: '#ddd6fe' },
+    { label: 'Citas hoy',               value: stats?.citasHoy             ?? '…', color: '#1a56db', bg: '#eff6ff', border: '#bfdbfe' },
+    { label: 'Pacientes nuevos',         value: stats?.pacientesNuevos      ?? '…', color: '#0891b2', bg: '#ecfeff', border: '#a5f3fc' },
+    { label: 'Atenciones completadas',   value: stats?.atencionesCompletadas ?? '…', color: '#15803d', bg: '#f0fdf4', border: '#bbf7d0' },
+    { label: 'Médicos activos',          value: stats?.medicosActivos        ?? '…', color: '#7c3aed', bg: '#f5f3ff', border: '#ddd6fe' },
+    { label: 'Notificaciones sin leer',  value: noLeidas,                           color: '#d97706', bg: '#fffbeb', border: '#fde68a' },
   ];
 
   return (

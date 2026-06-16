@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../../context/AuthContext';
 import { buscarMedicos } from '../../../services/medicoService';
+import { contarNoLeidas } from '../../../services/notificacionService';
 import MedicoAgenda from '../MedicoAgenda';
 import styles from './InicioTab.module.css';
 
 const InicioTab = ({ onIrMedicos, onIrHistorial }) => {
   const { user } = useAuth();
-  const [medicos, setMedicos]     = useState([]);
+  const [medicos,   setMedicos]   = useState([]);
   const [medicoSel, setMedicoSel] = useState(null);
+  const [noLeidas,  setNoLeidas]  = useState(null);
 
   useEffect(() => {
     buscarMedicos({}).then((d) => setMedicos(d.medicos.slice(0, 3))).catch(() => {});
+    contarNoLeidas().then(setNoLeidas).catch(() => setNoLeidas(0));
   }, []);
 
   return (
@@ -48,6 +51,36 @@ const InicioTab = ({ onIrMedicos, onIrHistorial }) => {
         </div>
         <div className={styles.emptyMsg}>No hay citas próximas agendadas</div>
       </div>
+
+      {/* Notificaciones */}
+      {noLeidas !== null && (
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 14,
+          background: noLeidas > 0 ? '#fffbeb' : '#f8fafc',
+          border: `1.5px solid ${noLeidas > 0 ? '#fde68a' : '#e2e8f0'}`,
+          borderRadius: 14, padding: '14px 20px', marginBottom: 4,
+        }}>
+          <div style={{
+            width: 42, height: 42, borderRadius: 10, flexShrink: 0,
+            background: noLeidas > 0 ? '#fef3c7' : '#f1f5f9',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke={noLeidas > 0 ? '#d97706' : '#94a3b8'} strokeWidth="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+          </div>
+          <div>
+            <div style={{ fontSize: 22, fontWeight: 800, color: noLeidas > 0 ? '#d97706' : '#64748b', lineHeight: 1 }}>
+              {noLeidas}
+            </div>
+            <div style={{ fontSize: 13, color: '#64748b', marginTop: 2 }}>
+              Notificacion{noLeidas !== 1 ? 'es' : ''} sin leer
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Contenido inferior: 2 columnas */}
       <div className={styles.bottomGrid}>

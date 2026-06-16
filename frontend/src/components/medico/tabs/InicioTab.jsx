@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getMedicoDashboard } from '../../../services/medicoService';
+import { contarNoLeidas } from '../../../services/notificacionService';
 import styles from './InicioTab.module.css';
 
 const fmtHora = (iso) =>
@@ -13,13 +14,15 @@ const ESTADO_STYLE = {
 };
 
 const InicioTab = ({ onNavigate }) => {
-  const [data, setData]   = useState(null);
-  const [error, setError] = useState(null);
+  const [data,     setData]     = useState(null);
+  const [error,    setError]    = useState(null);
+  const [noLeidas, setNoLeidas] = useState('…');
 
   useEffect(() => {
     getMedicoDashboard()
       .then(setData)
       .catch(() => setError('No se pudieron cargar las estadísticas'));
+    contarNoLeidas().then(setNoLeidas).catch(() => setNoLeidas(0));
   }, []);
 
   const stats = [
@@ -43,6 +46,11 @@ const InicioTab = ({ onNavigate }) => {
       label: 'Órdenes de examen',
       value: data ? data.ordenesExamen : '…',
       color: '#7c3aed', bg: '#faf5ff',
+    },
+    {
+      label: 'Notificaciones sin leer',
+      value: noLeidas,
+      color: '#d97706', bg: '#fffbeb',
     },
   ];
 

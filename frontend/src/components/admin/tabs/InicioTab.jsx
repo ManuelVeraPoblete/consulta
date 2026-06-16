@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { listarUsuarios } from '../../../services/adminService';
+import { contarNoLeidas } from '../../../services/notificacionService';
 import styles from './InicioTab.module.css';
 
 const InicioTab = ({ onNavigate }) => {
-  const [stats, setStats] = useState({ total: 0, medicos: 0, secretarias: 0, pacientes: 0, inactivos: 0 });
+  const [stats,    setStats]    = useState({ total: 0, medicos: 0, secretarias: 0, pacientes: 0, inactivos: 0 });
+  const [noLeidas, setNoLeidas] = useState('…');
 
   useEffect(() => {
     listarUsuarios().then((usuarios) => {
@@ -15,14 +17,16 @@ const InicioTab = ({ onNavigate }) => {
         inactivos:  usuarios.filter(u => !u.activo).length,
       });
     }).catch(() => {});
+    contarNoLeidas().then(setNoLeidas).catch(() => setNoLeidas(0));
   }, []);
 
   const cards = [
-    { label: 'Total usuarios',  value: stats.total,       color: '#7c3aed', bg: '#f5f3ff', border: '#ddd6fe' },
-    { label: 'Médicos',         value: stats.medicos,     color: '#0891b2', bg: '#ecfeff', border: '#a5f3fc' },
-    { label: 'Secretarias',     value: stats.secretarias, color: '#1a56db', bg: '#eff6ff', border: '#bfdbfe' },
-    { label: 'Pacientes',       value: stats.pacientes,   color: '#15803d', bg: '#f0fdf4', border: '#bbf7d0' },
-    { label: 'Usuarios inactivos', value: stats.inactivos, color: '#b91c1c', bg: '#fef2f2', border: '#fecaca' },
+    { label: 'Total usuarios',       value: stats.total,       color: '#7c3aed', bg: '#f5f3ff', border: '#ddd6fe' },
+    { label: 'Médicos',              value: stats.medicos,     color: '#0891b2', bg: '#ecfeff', border: '#a5f3fc' },
+    { label: 'Secretarias',          value: stats.secretarias, color: '#1a56db', bg: '#eff6ff', border: '#bfdbfe' },
+    { label: 'Pacientes',            value: stats.pacientes,   color: '#15803d', bg: '#f0fdf4', border: '#bbf7d0' },
+    { label: 'Usuarios inactivos',   value: stats.inactivos,   color: '#b91c1c', bg: '#fef2f2', border: '#fecaca' },
+    { label: 'Notificaciones sin leer', value: noLeidas,       color: '#d97706', bg: '#fffbeb', border: '#fde68a' },
   ];
 
   return (
