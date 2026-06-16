@@ -1,5 +1,5 @@
 const { Op } = require('sequelize');
-const { MedicoPerfil, User, Cita, Paciente, AtencionMedica, Receta, RecetaItem, Especialidad: EspecialidadModel } = require('../models');
+const { MedicoPerfil, User, Cita, Paciente, AtencionMedica, Receta, RecetaItem, Especialidad: EspecialidadModel, OrdenExamen } = require('../models');
 
 const buscarMedicos = async (req, res) => {
   try {
@@ -98,7 +98,7 @@ const getDashboard = async (req, res) => {
 
     const [recetasEmitidas, ordenesExamen] = await Promise.all([
       Receta.count({ where: { medico_id: medicoId } }),
-      AtencionMedica.count({ where: { medico_id: medicoId } }),
+      OrdenExamen.count({ where: { medico_id: medicoId, estado: { [Op.ne]: 'cancelado' } } }),
     ]);
 
     res.json({

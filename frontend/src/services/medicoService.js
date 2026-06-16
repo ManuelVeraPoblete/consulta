@@ -80,3 +80,21 @@ export const getMisRecetas = async (busqueda = '') => {
   const { data } = await api.get(`/medicos/recetas?${params}`);
   return data;
 };
+
+export const getMisOrdenes = async ({ busqueda = '', estado = '' } = {}) => {
+  const params = new URLSearchParams();
+  if (busqueda) params.append('busqueda', busqueda);
+  if (estado)   params.append('estado', estado);
+  const { data } = await api.get(`/ordenes/mis-ordenes?${params}`);
+  return data;
+};
+
+export const crearOrden = async (payload) => {
+  const { data } = await api.post('/ordenes', payload);
+  return data;
+};
+
+export const actualizarEstadoOrden = async (id, estado) => {
+  const { data } = await api.patch(`/ordenes/${id}/estado`, { estado });
+  return data;
+};

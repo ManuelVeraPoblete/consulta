@@ -17,6 +17,8 @@ const { Receta } = require('./Receta');
 const { RecetaItem } = require('./RecetaItem');
 const { Medicamento } = require('./Medicamento');
 const { AgendaBloqueo } = require('./AgendaBloqueo');
+const { OrdenExamen } = require('./OrdenExamen');
+const { OrdenExamenItem } = require('./OrdenExamenItem');
 
 /**
  * Usuario ↔ Perfil médico
@@ -211,6 +213,21 @@ AgendaBloqueo.belongsTo(User, {
 });
 
 /**
+ * OrdenExamen ↔ Paciente / Médico / Cita / Items
+ */
+OrdenExamen.belongsTo(Paciente,    { foreignKey: 'paciente_id', as: 'paciente' });
+OrdenExamen.belongsTo(User,        { foreignKey: 'medico_id',   as: 'medico'   });
+OrdenExamen.belongsTo(Cita,        { foreignKey: 'cita_id',     as: 'cita'     });
+OrdenExamen.belongsTo(AtencionMedica, { foreignKey: 'atencion_id', as: 'atencion' });
+OrdenExamen.hasMany(OrdenExamenItem,  { foreignKey: 'orden_id',  as: 'items'    });
+
+OrdenExamenItem.belongsTo(OrdenExamen, { foreignKey: 'orden_id', as: 'orden' });
+
+Paciente.hasMany(OrdenExamen, { foreignKey: 'paciente_id', as: 'ordenesExamen' });
+User.hasMany(OrdenExamen,     { foreignKey: 'medico_id',   as: 'ordenesEmitidas' });
+Cita.hasOne(OrdenExamen,      { foreignKey: 'cita_id',     as: 'ordenExamen' });
+
+/**
  * Verifica la conexión a la base de datos.
  *
  * IMPORTANTE:
@@ -244,6 +261,8 @@ module.exports = {
   RecetaItem,
   Medicamento,
   AgendaBloqueo,
+  OrdenExamen,
+  OrdenExamenItem,
 
   syncDatabase,
 };
